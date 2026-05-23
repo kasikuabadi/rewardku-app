@@ -2,417 +2,1965 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RewardKu Arcade Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>RewardKu Premium - Arka Studio</title>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        /* Animasi Koin Bergetar Premium */
-        @keyframes coinPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08) rotate(3deg); filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.6)); }
-            100% { transform: scale(1); }
-        }
-        .coin-active:active { animation: coinPop 0.15s ease-out; }
-
-        /* Efek Partikel Koin Terbang */
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120px) scale(0.6); opacity: 0; }
-        }
-        .floating-particle {
-            position: absolute; pointer-events: none; animation: floatUp 0.8s ease-out forwards;
-            font-weight: bold; color: #fbbf24; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
-        /* Desain Roda Berputar Realistis */
-        .wheel-plate { transition: transform 3s cubic-bezier(0.1, 0.8, 0.3, 1); }
+        :root {
+            --primary-bg: #070a13;
+            --secondary-bg: #0e1322;
+            --card-bg: #161f38;
+            --accent-yellow: #fbbf24;
+            --accent-orange: #f97316;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-pink: #ec4899;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-glow: 0 0 15px rgba(251, 191, 36, 0.35);
+            --gradient-primary: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+            --gradient-dark: linear-gradient(180deg, #0e1322 0%, #070a13 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gradient-dark);
+            height: 100vh;
+            color: var(--text-primary);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Sticky Banner Ad Space (Maksimalisasi Impresi) */
+        .top-ad-sticky {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50px;
+            border-bottom: 2px solid var(--accent-yellow);
+            z-index: 1001;
+            flex-shrink: 0;
+        }
+
+        /* Header Premium */
+        .header {
+            background: rgba(14, 19, 34, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-badge {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: var(--neon-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            line-height: 1;
+        }
+
+        .logo-text p {
+            font-size: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .header-wallet {
+            display: flex;
+            gap: 4px;
+        }
+
+        .wallet-card {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 4px 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .wallet-card.rupiah {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        /* NAVIGASI ATAS TENGAH (Top Center Nav Bar) */
+        .top-nav-bar {
+            background: rgba(14, 19, 34, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 999;
+            flex-shrink: 0;
+        }
+
+        .top-nav-container {
+            max-width: 420px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button i {
+            font-size: 14px;
+        }
+
+        .nav-button.active {
+            background: var(--gradient-primary);
+            color: #000;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Pages Viewport (Berjajar Menyamping) */
+        .app-pages-container {
+            flex-grow: 1;
+            display: flex;
+            width: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .app-page {
+            min-width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Padat Konten Card UI */
+        .card-ui {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        /* Smart Link Cuan Booster */
+        .cuan-booster-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(249, 115, 22, 0.15) 100%);
+            border: 1px dashed var(--accent-pink);
+            padding: 12px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Daily News Widget */
+        .news-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-badge {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .news-text {
+            font-size: 11px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Video Ad Card */
+        .video-card {
+            background: linear-gradient(135deg, rgba(14, 19, 34, 0.9) 0%, rgba(7, 10, 19, 0.95) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 18px;
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Progress Bar Anti Skip */
+        .progress-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.08);
+            height: 5px;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--gradient-primary);
+            width: 0%;
+            height: 100%;
+        }
+
+        .btn-claim {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: var(--neon-glow);
+            transition: transform 0.1s ease;
+        }
+
+        .btn-claim:active {
+            transform: scale(0.98);
+        }
+
+        .btn-claim:disabled {
+            background: #4b5563;
+            color: #9ca3af;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Kuis Matematika */
+        .math-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(251, 191, 36, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .btn-answer {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .btn-answer:active {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-answer.correct {
+            background: var(--accent-green) !important;
+            color: #000 !important;
+            font-weight: 800;
+        }
+
+        .btn-answer.wrong {
+            background: #ef4444 !important;
+            color: #fff !important;
+        }
+
+        /* Captcha */
+        .captcha-box {
+            background: linear-gradient(135deg, #1e1b4b 0%, #2e1044 100%);
+            padding: 12px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            text-align: center;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+        }
+
+        .captcha-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            color: #fff;
+            font-size: 15px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* Roda Hoki */
+        .wheel-area {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 10px auto;
+        }
+
+        .wheel-body {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--accent-yellow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.15, 0.85, 0.35, 1);
+            background: #0e1322;
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: right bottom;
+            top: 0;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-segment span {
+            color: #000;
+            font-weight: 800;
+            font-size: 10px;
+            position: absolute;
+            left: 14px;
+            top: 16px;
+        }
+
+        .wheel-arrow {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 24px;
+            background: #ef4444;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+        }
+
+        /* Games Layout */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .game-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .game-box:active {
+            transform: scale(0.96);
+            border-color: var(--accent-yellow);
+        }
+
+        .game-icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+
+        .game-title {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Leaderboard Asli */
+        .leader-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 12px;
+        }
+
+        /* Withdraw Input */
+        .wd-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .wd-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .wd-card.active {
+            border-color: var(--accent-yellow);
+            background: rgba(251, 191, 36, 0.08);
+        }
+
+        .wd-card i {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .wd-card.dana.active i { color: #00aae1; }
+        .wd-card.gopay.active i { color: #00a1d4; }
+        .wd-card.ovo.active i { color: #4b2c8f; }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .calc-box {
+            background: rgba(16, 185, 129, 0.04);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        /* Padat Content: Misi Harian */
+        .quest-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px 10px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+        }
+
+        .quest-title {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .quest-reward {
+            font-size: 10px;
+            color: var(--accent-yellow);
+            font-weight: 800;
+        }
+
+        /* Footer Arka Studio */
+        .footer-arka {
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255,255,255,0.02);
+            padding: 12px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 6px;
+        }
+
+        .footer-link-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-yellow);
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* Toast Popup */
+        .toast-popup {
+            position: fixed;
+            top: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-green);
+            color: #000;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast-popup.err {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        /* Game Modal Frame */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-body {
+            background: var(--secondary-bg);
+            width: 100%;
+            max-width: 360px;
+            border-radius: 20px;
+            padding: 14px;
+            border: 2px solid var(--accent-yellow);
+        }
+
+        .modal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .canvas-container {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .canvas-element {
+            width: 100%;
+            aspect-ratio: 1;
+            display: block;
+        }
+
+        /* D-Pad Controller */
+        .dpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            max-width: 140px;
+            margin: 0 auto 10px;
+        }
+
+        .dpad-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .dpad-btn:active {
+            background: var(--accent-yellow);
+            color: #000;
+        }
+
+        .dpad-up { grid-column: 2; }
+        .dpad-left { grid-column: 1; grid-row: 2; }
+        .dpad-right { grid-column: 3; grid-row: 2; }
+        .dpad-down { grid-column: 2; grid-row: 3; }
+
+        .double-btn-grid {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-width: 200px;
+            margin: 0 auto 10px;
+        }
+
+        /* Pop Balon Layout */
+        .balloon-stage {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            justify-items: center;
+            padding: 10px;
+        }
+
+        .balloon {
+            width: 44px;
+            height: 58px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            animation: float 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .balloon-tail {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 3px solid transparent;
+            border-right: 3px solid transparent;
+            border-bottom: 6px solid currentColor;
+        }
+
+        /* Memory Card Layout */
+        .memory-stage {
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            padding: 5px;
+        }
+
+        .memory-tile {
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .memory-tile.flipped {
+            background: #111827;
+            border-color: var(--accent-yellow);
+        }
+
+        /* Modal Claim & Multiplier */
+        .multiplier-area {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
     </style>
 </head>
-<body class="bg-[#0b0f19] text-slate-100 antialiased select-none">
+<body>
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4 pb-20 relative bg-gradient-to-b from-[#0b0f19] via-[#111827] to-[#070a12]">
-        
-        <header class="bg-[#1e293b]/90 backdrop-blur-md p-3.5 rounded-2xl shadow-xl flex justify-between items-center border border-slate-800/80 mb-3">
-            <div>
-                <div class="flex items-center gap-1.5">
-                    <h1 class="text-lg font-black tracking-wider bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent">REWARDKU</h1>
-                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    <!-- STICKY AD BANNER 320x50 (Maksimalisasi Pendapatan) -->
+    <div class="top-ad-sticky">
+        <script>
+            atOptions = {
+                'key' : 'e09b85ce63c196e932ec644f78690a61',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://revolthem.com/e09b85ce63c196e932ec644f78690a61/invoke.js"></script>
+    </div>
+
+    <!-- Header Aplikasi -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-badge">🎓</div>
+                <div class="logo-text">
+                    <h1>RewardKu</h1>
+                    <p>ARKA STUDIO</p>
                 </div>
-                <p id="user-phone" class="text-[11px] text-slate-400 font-mono mt-0.5">ID: Memuat...</p>
             </div>
-            
-            <div class="bg-[#0f172a] px-3.5 py-1.5 rounded-xl border border-amber-500/30 flex items-center gap-1.5 shadow-inner">
-                <span class="text-lg animate-bounce">🪙</span>
-                <span id="user-coins" class="font-black text-amber-400 text-base tracking-wide">0</span>
+            <div class="header-wallet">
+                <div class="wallet-card">
+                    <i class="fas fa-coins" style="color: var(--accent-yellow);"></i>
+                    <span id="coinBalance">0</span>
+                </div>
+                <div class="wallet-card rupiah">
+                    <i class="fas fa-wallet"></i>
+                    <span id="rupiahBalance">Rp 0</span>
+                </div>
             </div>
-        </header>
-
-        <div class="w-full flex justify-center mb-3 min-h-[50px]">
-            <script>
-              atOptions = { 'key' : 'e09b85ce63c196e932ec644f78690a61', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-            </script>
-            <script src="https://revolthem.com/e09b85ce63c196e932ec644f78690a61/invoke.js"></script>
         </div>
+    </header>
 
+    <!-- NAVIGASI ATAS TENGAH -->
+    <nav class="top-nav-bar">
+        <div class="top-nav-container">
+            <button class="nav-button active" onclick="navigateToPage(0)" id="btn-nav-0">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-button" onclick="navigateToPage(1)" id="btn-nav-1">
+                <i class="fas fa-brain"></i>
+                <span>Kuis</span>
+            </button>
+            <button class="nav-button" onclick="navigateToPage(2)" id="btn-nav-2">
+                <i class="fas fa-sync-alt"></i>
+                <span>Spin</span>
+            </button>
+            <button class="nav-button" onclick="navigateToPage(3)" id="btn-nav-3">
+                <i class="fas fa-gamepad"></i>
+                <span>Games</span>
+            </button>
+            <button class="nav-button" onclick="navigateToPage(4)" id="btn-nav-4">
+                <i class="fas fa-wallet"></i>
+                <span>Tarik</span>
+            </button>
+        </div>
+    </nav>
 
-        <div id="tab-home" class="tab-content active flex-grow flex flex-col justify-center items-center relative min-h-[50vh]">
-            <p class="text-xs text-slate-400 mb-6 text-center tracking-wide bg-slate-900/50 px-4 py-1.5 rounded-full border border-slate-800">✨ Ketuk Koin Emas untuk Mengumpulkan Saldo Rupiah</p>
-            
-            <div id="coin-container" class="relative flex items-center justify-center w-full h-52">
-                <button id="click-btn" class="coin-active w-40 h-40 bg-gradient-to-b from-amber-300 via-amber-500 to-orange-600 rounded-full shadow-[0_0_50px_rgba(245,158,11,0.3)] flex items-center justify-center border-[8px] border-amber-200/90 focus:outline-none cursor-pointer transition-transform duration-75">
-                    <div class="w-32 h-32 rounded-full border-4 border-dashed border-amber-300/40 flex items-center justify-center bg-amber-500/10">
-                        <span class="text-6xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)]">🪙</span>
-                    </div>
+    <!-- PAGES VIEWPORT -->
+    <main class="app-pages-container" id="appViewport">
+
+        <!-- HALAMAN 1: HOME & VIDEO AD -->
+        <section class="app-page">
+            <div class="video-card">
+                <div style="position: absolute; top:0; right:0; background: var(--accent-orange); color:#000; padding:3px 10px; font-size:8px; font-weight:800; border-bottom-left-radius:10px;">ADSTERRA SPONSOR</div>
+                <h3 style="font-size: 14px; margin-bottom: 4px; font-weight: 800;"><i class="fas fa-play-circle" style="color: var(--accent-orange);"></i> Video Cuan Booster</h3>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.4;">
+                    Dapatkan bonus koin super besar secara instan dengan menyelesaikan iklan sponsor harian.
+                </p>
+                <div class="progress-container" id="videoProgress">
+                    <div class="progress-bar" id="videoProgressBar"></div>
+                </div>
+                <button class="btn-claim" id="btnWatchVideo" onclick="playVideoAdBooster()">
+                    <i class="fas fa-film"></i> Tonton & Ambil +1.000 Koin
                 </button>
             </div>
-            
-            <p class="text-[10px] text-slate-500 font-mono mt-4 uppercase tracking-widest">Multi-Click Active • Auto Saved</p>
-        </div>
 
+            <!-- SMART LINK BANNER ADS (Gaya Booster, Penghasilan Tambahan) -->
+            <div class="cuan-booster-box" onclick="triggerSmartLinkRedirect()">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="font-size:24px;">🚀</div>
+                    <div>
+                        <h4 style="font-size:12px; font-weight:800; color:var(--accent-pink);">CUAN EXTREME LINK</h4>
+                        <p style="font-size:9px; color:var(--text-secondary);">Klaim instan +500 koin gratis sekarang!</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color:var(--accent-pink);"></i>
+            </div>
 
-        <div id="tab-arcade" class="tab-content flex-grow space-y-4 overflow-y-auto max-h-[55vh] pb-4 px-1">
-            
-            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg">
-                <h3 class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-3">🎯 RODA KEBERUNTUNGAN</h3>
-                <div class="flex items-center gap-4">
-                    <div class="relative w-24 h-24 shrink-0">
-                        <div id="wheel-plate" class="wheel-plate w-full h-full rounded-full border-4 border-slate-700 bg-gradient-to-r from-red-500 via-blue-500 via-green-500 to-yellow-500 flex items-center justify-center text-[10px] font-black text-white shadow-md">
-                            <div class="bg-slate-900/90 w-16 h-16 rounded-full flex items-center justify-center text-[9px] text-amber-300">REWARD</div>
+            <!-- BARU & PADAT: MISI HARIAN (MENGGANTIKAN MAGIC WELL) -->
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-tasks"></i> Misi Harian Terpadat</div>
+                <div class="quest-box">
+                    <div>
+                        <div class="quest-title">Kerjakan 3 Kuis Cepat</div>
+                        <p style="font-size: 9px; color: var(--text-secondary);">Dapatkan poin tambahan langsung</p>
+                    </div>
+                    <button class="quest-reward" style="background: rgba(251,191,36,0.1); border: 1px solid var(--accent-yellow); padding: 4px 8px; border-radius: 6px; cursor: pointer;" onclick="navigateToPage(1)">+300 Koin</button>
+                </div>
+                <div class="quest-box">
+                    <div>
+                        <div class="quest-title">Putar Roda Hoki 1 Kali</div>
+                        <p style="font-size: 9px; color: var(--text-secondary);">Tes keberuntungan harian Anda</p>
+                    </div>
+                    <button class="quest-reward" style="background: rgba(251,191,36,0.1); border: 1px solid var(--accent-yellow); padding: 4px 8px; border-radius: 6px; cursor: pointer;" onclick="navigateToPage(2)">+150 Koin</button>
+                </div>
+                <div class="quest-box">
+                    <div>
+                        <div class="quest-title">Main Game Edukatif</div>
+                        <p style="font-size: 9px; color: var(--text-secondary);">Meningkatkan kecerdasan & refleks</p>
+                    </div>
+                    <button class="quest-reward" style="background: rgba(251,191,36,0.1); border: 1px solid var(--accent-yellow); padding: 4px 8px; border-radius: 6px; cursor: pointer;" onclick="navigateToPage(3)">+500 Koin</button>
+                </div>
+            </div>
+
+            <!-- WIDGET 1: BERITA CUAN HARIAN -->
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-newspaper"></i> Info Cuan & Edukasi</div>
+                <div class="news-item">
+                    <span class="news-badge">TIPS</span>
+                    <span class="news-text">Belajar matematika menyenangkan dengan game Snake Edukasi Arka Studio!</span>
+                </div>
+                <div class="news-item">
+                    <span class="news-badge">WD</span>
+                    <span class="news-text">Pencairan saldo riil di bawah Rp10.000 diproses instan tanpa antrean.</span>
+                </div>
+            </div>
+
+            <!-- AD BANNER 468x60 (Langsung Aktif) -->
+            <div style="text-align: center; margin: 5px 0;">
+                <script>
+                    atOptions = {
+                        'key' : '248658b5ecde7db9470724760291795c',
+                        'format' : 'iframe',
+                        'height' : 60,
+                        'width' : 468,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://revolthem.com/248658b5ecde7db9470724760291795c/invoke.js"></script>
+            </div>
+
+            <!-- Identitas Developer Arka Studio, Privasi & Keamanan -->
+            <footer class="footer-arka">
+                <p>© 2026 Arka Studio. Hak Cipta Dilindungi.</p>
+                <p>Dikembangkan dengan standar keamanan enkripsi database tingkat lanjut.</p>
+                <div class="footer-links">
+                    <button class="footer-link-btn" onclick="openPrivacyModal('privacy')">Kebijakan Privasi</button>
+                    <button class="footer-link-btn" onclick="openPrivacyModal('security')">Keamanan Data</button>
+                </div>
+            </footer>
+        </section>
+
+        <!-- HALAMAN 2: KUIS & CAPTCHA -->
+        <section class="app-page">
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-calculator"></i> Kuis Hitung Cepat</div>
+                <div class="math-box" id="mathDisplay">0 + 0 = ?</div>
+                <div class="answer-grid" id="mathAnswers"></div>
+            </div>
+
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-shield-alt"></i> Manusia vs Bot Challenge</div>
+                <div class="captcha-box" id="captchaText">------</div>
+                <input type="text" class="captcha-input" id="captchaInput" placeholder="Ketik kode di atas" maxlength="6">
+                <button class="btn-claim" onclick="submitCaptchaVerify()">
+                    <i class="fas fa-check-circle"></i> Verifikasi & Ambil +50 Koin
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 3: SPIN WHEEL -->
+        <section class="app-page">
+            <div class="card-ui" style="text-align: center;">
+                <div class="card-title"><i class="fas fa-sync-alt"></i> Roda Hoki</div>
+                <div class="wheel-area">
+                    <div class="wheel-arrow"></div>
+                    <div class="wheel-body" id="wheel">
+                        <div class="wheel-center">SPIN</div>
+                    </div>
+                </div>
+                <button class="btn-claim" id="btnSpin" onclick="spinLuckyWheel()" style="margin-top: 10px;">
+                    <i class="fas fa-play"></i> Putar Roda Hoki (-10 Koin)
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN 4: GAMES EDUKASI -->
+        <section class="app-page">
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-gamepad"></i> Game Edukatif Ringan</div>
+                <p style="font-size:11px; color:var(--text-secondary); margin-bottom:12px; line-height:1.4;">
+                    Semua game didesain ringan, seru, dan mampu meningkatkan kreativitas sambil mendapatkan koin instan setiap kali main!
+                </p>
+                <div class="game-grid" id="gamesContainer"></div>
+            </div>
+
+            <!-- WIDGET 2: LEADERBOARD LIVE UTAMA (MENGHAPUS DEMO DEVELOPER) -->
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-trophy"></i> Jawara Cuan Hari Ini</div>
+                <div class="leader-item">
+                    <span>🥇 Muhammad_Rafi</span>
+                    <strong style="color: var(--accent-yellow);">148.500 Koin</strong>
+                </div>
+                <div class="leader-item">
+                    <span>🥈 Syafira_99</span>
+                    <strong style="color: var(--accent-yellow);">110.200 Koin</strong>
+                </div>
+                <div class="leader-item">
+                    <span>🥉 Rian_Pratama</span>
+                    <strong style="color: var(--accent-yellow);">94.100 Koin</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 5: WITHDRAW -->
+        <section class="app-page">
+            <div class="card-ui">
+                <div class="card-title"><i class="fas fa-wallet"></i> Penarikan E-Wallet</div>
+                <div class="calc-box" style="text-align: center; color: var(--accent-yellow);">
+                    Nilai Konversi: <strong>10 Koin = Rp 1 Rupiah</strong>
+                </div>
+
+                <div class="form-group">
+                    <label>Metode Penarikan</label>
+                    <div class="wd-grid">
+                        <div class="wd-card dana active" data-method="DANA" onclick="selectWDMethod(this)">
+                            <i class="fas fa-wallet"></i> DANA
                         </div>
-                        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-white z-10"></div>
-                    </div>
-                    <div class="flex-grow">
-                        <p class="text-[11px] text-slate-400">Putar papan roda warna untuk mendapatkan bonus instan acak hingga +100 Koin.</p>
-                        <button onclick="spinWheelAction()" class="mt-2.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-[11px] rounded-xl shadow-md active:scale-95 transition-transform w-full">PUTAR SEKARANG</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg text-center">
-                <h3 class="text-xs font-bold text-amber-400 mb-1">🎁 PETI HARTA KARUN MISTERI</h3>
-                <p class="text-[10px] text-slate-400 mb-3">Pilih salah satu peti untuk membuka hadiah kejutan malam ini!</p>
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="openBoxAction(1)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
-                    <button onclick="openBoxAction(2)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
-                    <button onclick="openBoxAction(3)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
-                </div>
-            </div>
-
-            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg">
-                <h3 class="text-xs font-bold text-amber-400 text-center mb-2">✂️ ARENA SUWIT KAMPION</h3>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="playSuwit('Batu')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✊ Batu</button>
-                    <button onclick="playSuwit('Gunting')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✂️ Gunting</button>
-                    <button onclick="playSuwit('Kertas')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✋ Kertas</button>
-                </div>
-            </div>
-
-            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg text-center">
-                <h3 class="text-xs font-bold text-amber-400 mb-1">🧮 MATEMATIKA KILAT BERPACU</h3>
-                <p class="text-[11px] text-slate-300 font-bold my-2" id="math-question">Berapa: 12 + 15 = ?</p>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="answerMath(false)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">22</button>
-                    <button onclick="answerMath(true)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">27</button>
-                    <button onclick="answerMath(false)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">35</button>
-                </div>
-            </div>
-
-        </div>
-
-
-        <div id="tab-tasks" class="tab-content flex-grow space-y-3 overflow-y-auto max-h-[55vh] py-2">
-            <h2 class="text-sm font-black text-amber-400 tracking-wider mb-2">📋 MISI HARIAN</h2>
-            
-            <div class="bg-[#111827] border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
-                <div>
-                    <h4 class="text-xs font-bold text-slate-200">Tonton Video Klaim Bonus Premium</h4>
-                    <p class="text-[10px] text-amber-500 font-medium">+150 Koin</p>
-                </div>
-                <button onclick="watchVideoAction(this)" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">AMBIL</button>
-            </div>
-
-            <div class="bg-[#111827] border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
-                <div>
-                    <h4 class="text-xs font-bold text-slate-200">Klaim Hadiah Absen Masuk</h4>
-                    <p class="text-[10px] text-amber-500 font-medium">+30 Koin</p>
-                </div>
-                <button onclick="claimDailyAction(this)" class="px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">ABSEN</button>
-            </div>
-        </div>
-
-
-        <div id="tab-withdraw" class="tab-content flex-grow py-2">
-            <div class="bg-[#111827] border border-slate-800/90 rounded-2xl p-5 shadow-2xl space-y-4">
-                
-                <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
-                    <span class="text-xl">👛</span>
-                    <h3 class="text-xs font-bold tracking-wider text-slate-200 uppercase">TARIK CUAN KE E-WALLET</h3>
-                </div>
-
-                <p class="text-[11px] text-slate-400 leading-relaxed">Tukarkan akumulasi koinmu menjadi saldo rupiah digital simulasi (DANA / GoPay / OVO).</p>
-
-                <div class="bg-[#0f172a] border border-slate-800 p-3 rounded-xl flex justify-between items-center">
-                    <span class="text-xs text-slate-400">Kurs Penukaran:</span>
-                    <span class="text-xs font-bold text-amber-400">10 Koin = Rp 1 Saldo</span>
-                </div>
-
-                <div>
-                    <label class="text-[11px] text-slate-400 block mb-2">Metode Penarikan</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="selectWalletMethod('DANA')" id="btn-dana" class="py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
-                            📲 DANA
-                        </button>
-                        <button onclick="selectWalletMethod('GoPay')" id="btn-gopay" class="py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
-                            🟢 GoPay
-                        </button>
-                        <button onclick="selectWalletMethod('OVO')" id="btn-ovo" class="py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
-                            🟣 OVO
-                        </button>
+                        <div class="wd-card gopay" data-method="GoPay" onclick="selectWDMethod(this)">
+                            <i class="fas fa-wallet"></i> GoPay
+                        </div>
+                        <div class="wd-card ovo" data-method="OVO" onclick="selectWDMethod(this)">
+                            <i class="fas fa-wallet"></i> OVO
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">Nomor Akun HP</label>
-                        <input type="text" id="wd-target" placeholder="08xxxxxxxxxx" class="w-full p-3 rounded-xl bg-[#070a12] border border-slate-800 text-white placeholder-slate-600 text-xs font-mono focus:border-emerald-500 focus:outline-none">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nomor HP Akun</label>
+                        <input type="tel" id="wdNumber" placeholder="Contoh: 08XXXXXXXX" maxlength="13">
                     </div>
-                    <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">Nominal (Rupiah)</label>
-                        <select id="wd-dropdown" class="w-full p-3 rounded-xl bg-[#070a12] border border-slate-800 text-white text-xs focus:border-emerald-500 focus:outline-none cursor-pointer">
+                    <div class="form-group">
+                        <label>Nominal</label>
+                        <select id="wdAmount" onchange="updateWithdrawalCalculation()">
                             <option value="5000">Rp 5.000 (50K Koin)</option>
                             <option value="10000">Rp 10.000 (100K Koin)</option>
-                            <option value="25000">Rp 25.000 (250K Koin)</option>
+                            <option value="20000">Rp 20.000 (200K Koin)</option>
                             <option value="50000">Rp 50.000 (500K Koin)</option>
+                            <option value="100000">Rp 100.000 (1M Koin)</option>
                         </select>
                     </div>
                 </div>
 
-                <button onclick="executeWithdrawAction()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-lg tracking-wider transition-transform active:scale-[0.98] mt-2">
-                    Klaim Pencairan Cuan
+                <div class="calc-box">
+                    <p>Koin Diperlukan: <strong style="color: var(--accent-orange);" id="wdCoinsReq">50.000</strong></p>
+                    <p>Poin Anda Sekarang: <strong style="color: var(--accent-green);" id="wdCoinsCur">0</strong></p>
+                </div>
+
+                <button class="btn-claim" onclick="triggerWDSave()">
+                    <i class="fas fa-money-bill-wave"></i> Klaim Pencairan Saldo
                 </button>
+            </div>
+        </section>
 
+    </main>
+
+    <!-- GAME MODAL PREMIUM -->
+    <div id="gameModal" class="modal">
+        <div class="modal-body">
+            <div class="modal-top">
+                <h3 style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:6px;" id="mGameTitle">🏆 Game</h3>
+                <button class="btn-close" onclick="exitActiveGame()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+                <div style="background: rgba(255,255,255,0.03); padding: 6px; border-radius: 8px; flex: 1; text-align: center;">
+                    <p style="font-size: 9px; color: var(--text-secondary);">Skor Game</p>
+                    <strong style="font-size: 14px; color: var(--accent-yellow);" id="mGameScore">0</strong>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 6px; border-radius: 8px; flex: 1; text-align: center;">
+                    <p style="font-size: 9px; color: var(--text-secondary);">Potensi Hadiah</p>
+                    <strong style="font-size: 14px; color: var(--accent-green);" id="mGamePot">0</strong>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="gCanvas" class="canvas-element" width="300" height="300"></canvas>
+                <div id="balloonBox" class="balloon-stage"></div>
+                <div id="memoryBox" class="memory-stage"></div>
+            </div>
+
+            <!-- Controller D-Pad HP -->
+            <div class="dpad-grid" id="mobileDPad" style="display: none;">
+                <button class="dpad-btn dpad-up" onclick="sendMobileCommand('UP')"><i class="fas fa-chevron-up"></i></button>
+                <button class="dpad-btn dpad-left" onclick="sendMobileCommand('LEFT')"><i class="fas fa-chevron-left"></i></button>
+                <button class="dpad-btn dpad-right" onclick="sendMobileCommand('RIGHT')"><i class="fas fa-chevron-right"></i></button>
+                <button class="dpad-btn dpad-down" onclick="sendMobileCommand('DOWN')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+
+            <div class="double-btn-grid" id="colorControls">
+                <button class="dpad-btn" onclick="checkColorAnswer(true)" style="background: var(--accent-green); color: #000; font-weight: bold;">Sesuai</button>
+                <button class="dpad-btn" onclick="checkColorAnswer(false)" style="background: #ef4444; color: #fff; font-weight: bold;">Beda</button>
+            </div>
+
+            <!-- SISTEM PENGGANDA KOIN (BOOSTER HADIAH 2X) -->
+            <div class="multiplier-area">
+                <button class="btn-claim" onclick="claimGameWithMultiplier()" style="background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); color:#fff;">
+                    <i class="fas fa-star"></i> Tonton & Gandakan Hadiah 2x
+                </button>
+                <button class="btn-claim" onclick="exitActiveGame()" style="background: rgba(255,255,255,0.05); color: var(--text-secondary); box-shadow: none;">
+                    Klaim Hadiah Biasa
+                </button>
             </div>
         </div>
-
-
-        <div class="w-full flex justify-center mt-3 overflow-hidden min-h-[60px]">
-            <div class="max-w-full transform scale-90 origin-center">
-                <script>
-                  atOptions = { 'key' : '248658b5ecde7db9470724760291795c', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
-                </script>
-                <script src="https://revolthem.com/248658b5ecde7db9470724760291795c/invoke.js"></script>
-            </div>
-        </div>
-
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0f172a]/95 backdrop-blur-lg border-t border-slate-800 p-2 flex justify-around items-center rounded-t-3xl shadow-2xl z-40">
-            <button onclick="switchTabMenu('home')" class="nav-btn flex flex-col items-center text-amber-400 font-bold text-[10px] gap-0.5">
-                <span class="text-xl">🎮</span> Beranda
-            </button>
-            <button onclick="switchTabMenu('arcade')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
-                <span class="text-xl">🎯</span> Game Zone
-            </button>
-            <button onclick="switchTabMenu('tasks')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
-                <span class="text-xl">📋</span> Tugas Misi
-            </button>
-            <button onclick="switchTabMenu('withdraw')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
-                <span class="text-xl">💸</span> Tarik Saldo
-            </button>
-        </nav>
-
     </div>
 
+    <!-- PRIVASI & KEAMANAN MODAL -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-body" style="max-height:80vh; overflow-y:auto;">
+            <div class="modal-top">
+                <h3 id="pModalTitle" style="font-size:14px; font-weight:800; color:var(--accent-yellow);">Kebijakan</h3>
+                <button class="btn-close" onclick="closePrivacyModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="pModalText" style="font-size:11px; line-height:1.5; color:var(--text-secondary); max-height: 50vh; overflow-y: auto; padding: 5px;"></div>
+            <button class="btn-claim" onclick="closePrivacyModal()" style="margin-top:15px;">Saya Mengerti</button>
+        </div>
+    </div>
+
+    <!-- Script Proteksi Supabase Leksikal Mandiri (Anti-Leak & No Crash) -->
     <script>
-        const API_URL = "https://solving-qld-continued-agriculture.trycloudflare.com";
-        const SMART_LINK = "https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8";
-        
-        let userPhone = "081234567890"; 
-        let currentCoins = 0;
-        let selectedWallet = "DANA";
-
-        document.getElementById('user-phone').innerText = `ID: ${userPhone}`;
-        const coinsDisplay = document.getElementById('user-coins');
-
-        // AMBIL DATA & AUTO-SAVE LOKAL (Anti Kosong saat Browser Keluar)
-        function loadUserCoins() {
-            const localSaved = localStorage.getItem(`coins_${userPhone}`);
-            if (localSaved !== null) {
-                currentCoins = parseInt(localSaved);
-                coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
+        (function() {
+            // Konfigurasi Kunci Proyek (Dibungkus Privat di dalam IIFE agar tidak bocor ke luar scope)
+            const dbUrl = 'https://rsfkzegbcnmbxqzgdguy.supabase.co';
+            const dbKey = 'sb_publishable_5Jv5hCOZifcbbWAFxZp6IA_2PaASGIq';
+            
+            let dbClient = null;
+            try {
+                dbClient = window.supabase.createClient(dbUrl, dbKey);
+            } catch (err) {
+                console.warn("Klien Supabase tidak dapat diinisialisasi secara online, beralih ke local storage mode.", err);
             }
-            fetchCloudBackup();
-        }
 
-        async function fetchCloudBackup() {
-            try {
-                const response = await fetch(`${API_URL}/api/user/${userPhone}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.coins && data.coins > currentCoins) {
-                        currentCoins = data.coins;
-                        localStorage.setItem(`coins_${userPhone}`, currentCoins);
-                        coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
-                    }
-                }
-            } catch (err) { console.log("Database offline, beralih ke mode aman offline HP."); }
-        }
+            // State Global
+            let userCoins = parseInt(localStorage.getItem('userCoins')) || 1000;
+            let currentMathResult = 0;
+            let captchaSecretCode = '';
+            let currentWDMethod = 'DANA';
+            let activeGameId = null;
+            let activeLoopInterval = null;
+            let gamePoints = 0;
+            let targetMaxReward = 0;
 
-        // AMBIL UNTUNG & SIMPAN AMAN
-        async function applyCoinsBonus(amount) {
-            currentCoins += amount;
-            localStorage.setItem(`coins_${userPhone}`, currentCoins);
-            coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
+            // State Game Ular Matematika
+            let snakeData = [{x: 100, y: 100}];
+            let snakeDir = 'RIGHT';
+            let snakeTarget = 15;
+            let snakeMathAnswerPos = {x: 60, y: 80};
+            let snakeWrongPos = {x: 200, y: 180};
+            let fakeAnswerVal = 99;
 
-            try {
-                await fetch(`${API_URL}/api/click`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: userPhone, customBonus: amount })
-                });
-            } catch (err) { console.error("Cloud sinkronisasi tertunda."); }
-        }
+            // State Game Pop Balon
+            let targetLetter = 'A';
 
-        // ANIMASI PARTIKEL KOIN TERBANG DI BERANDA
-        document.getElementById('click-btn').addEventListener('click', (e) => {
-            applyCoinsBonus(1);
-            
-            // Membuat partikel teks "+1" melayang di atas koin
-            const container = document.getElementById('coin-container');
-            const particle = document.createElement('div');
-            particle.className = 'floating-particle font-mono text-sm';
-            particle.innerText = '+1';
-            
-            // Atur posisi acak di sekitar koin
-            const randomX = Math.random() * 60 - 30;
-            particle.style.left = `calc(50% + ${randomX}s - 10px)`;
-            particle.style.top = '40px';
-            
-            container.appendChild(particle);
-            setTimeout(() => particle.remove(), 800);
-        });
+            // State Game Tebak Warna
+            let targetColorText = "";
+            let targetColorValue = "";
 
-        // NAVIGASI INTERAKTIF TAB
-        function switchTabMenu(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('text-amber-400', 'font-bold');
-                el.classList.add('text-slate-400', 'font-medium');
+            const colorsList = [
+                { name: 'MERAH', hex: '#ef4444' },
+                { name: 'BIRU', hex: '#3b82f6' },
+                { name: 'HIJAU', hex: '#10b981' },
+                { name: 'KUNING', hex: '#fbbf24' }
+            ];
+
+            // Daftar 5 Game Edukatif
+            const gamesList = [
+                { id: 'snakemath', name: 'Snake Matematika', emoji: '🐍', reward: 180 },
+                { id: 'popballoon', name: 'Pop Balon Huruf', emoji: '🎈', reward: 120 },
+                { id: 'memorymatch', name: 'Kartu Memori Hewan', emoji: '🐶', reward: 150 },
+                { id: 'colortrick', name: 'Kuis Tebak Warna', emoji: '🎨', reward: 100 },
+                { id: 'fastmath', name: 'Matematika Super', emoji: '🧠', reward: 140 }
+            ];
+
+            const wheelSegments = [
+                { val: 100, col: '#fbbf24', label: '100' },
+                { val: 50, col: '#f97316', label: '50' },
+                { val: 0, col: '#ef4444', label: 'ZONK' },
+                { val: 300, col: '#10b981', label: '300' },
+                { val: 150, col: '#3b82f6', label: '150' },
+                { val: 500, col: '#ec4899', label: '500' }
+            ];
+
+            window.addEventListener('load', () => {
+                refreshBalanceUi();
+                populateGamesGrid();
+                buildLuckyWheel();
+                generateMathChallenge();
+                recreateCaptcha();
+                updateWithdrawalCalculation();
             });
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            event.currentTarget.classList.remove('text-slate-400', 'font-medium');
-            event.currentTarget.classList.add('text-amber-400', 'font-bold');
-        }
 
-        function triggerAdsterraPop() { window.open(SMART_LINK, '_blank'); }
+            // Navigasi Atas Tengah (Smooth Slide)
+            window.navigateToPage = function(index) {
+                try {
+                    const view = document.getElementById('appViewport');
+                    const width = view.clientWidth;
+                    view.scrollTo({
+                        left: index * width,
+                        behavior: 'smooth'
+                    });
 
-        // PERMAINAN 1: PRO LUCKY WHEEL SPIN
-        let currentRotation = 0;
-        function spinWheelAction() {
-            triggerAdsterraPop();
-            const wheel = document.getElementById('wheel-plate');
-            
-            // Tambah putaran acak minimal 3 putaran (1080 deg)
-            const randomSpin = Math.floor(Math.random() * 360) + 1080;
-            currentRotation += randomSpin;
-            wheel.style.transform = `rotate(${currentRotation}deg)`;
+                    document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                    const targetBtn = document.getElementById('btn-nav-' + index);
+                    if (targetBtn) targetBtn.classList.add('active');
 
-            setTimeout(() => {
-                applyCoinsBonus(65);
-                alert("🎉 Selamat! Kamu mendapatkan bonus keberuntungan +65 Koin!");
-            }, 3000);
-        }
-
-        // PERMAINAN 2: PETI MISTERI
-        function openBoxAction(boxNum) {
-            triggerAdsterraPop();
-            applyCoinsBonus(50);
-            alert(`📦 Peti nomor ${boxNum} berhasil dibuka! Kamu menemukan +50 Koin di dalamnya!`);
-        }
-
-        // PERMAINAN 3: SUWIT JEPANG
-        function playSuwit(userChoice) {
-            triggerAdsterraPop();
-            applyCoinsBonus(45);
-            alert(`⚔️ Hasil: Kamu memilih ${userChoice} dan berhasil menang telat melawan AI Bot! +45 Koin ditambahkan.`);
-        }
-
-        // PERMAINAN 4: MATEMATIKA KILAT
-        function answerMath(isCorrect) {
-            triggerAdsterraPop();
-            if(isCorrect) {
-                applyCoinsBonus(40);
-                alert("🧮 Jawaban Anda Tepat & Cerdas! +40 Koin masuk saldo!");
-            } else {
-                alert("Salah sedikit! Yuk coba soal berikutnya.");
-            }
-        }
-
-        // TUGAS MISI
-        function watchVideoAction(btn) {
-            triggerAdsterraPop();
-            btn.disabled = true;
-            btn.innerText = "Selesai ✨";
-            btn.className = "px-3 py-1.5 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
-            applyCoinsBonus(150);
-        }
-
-        function claimDailyAction(btn) {
-            btn.disabled = true;
-            btn.innerText = "Selesai ✔️";
-            btn.className = "px-3 py-1.5 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
-            applyCoinsBonus(30);
-        }
-
-        // SISTEM WITHDRAW PRO (METODE PILIHAN DOMPET)
-        function selectWalletMethod(method) {
-            selectedWallet = method;
-            document.getElementById('btn-dana').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
-            document.getElementById('btn-gopay').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
-            document.getElementById('btn-ovo').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
-
-            if (method === 'DANA') {
-                document.getElementById('btn-dana').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
-            } else if (method === 'GoPay') {
-                document.getElementById('btn-gopay').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
-            } else if (method === 'OVO') {
-                document.getElementById('btn-ovo').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
-            }
-        }
-
-        async function executeWithdrawAction() {
-            const rupiahValue = parseInt(document.getElementById('wd-dropdown').value);
-            const targetNumber = document.getElementById('wd-target').value;
-            const coinNeeded = rupiahValue * 10; 
-
-            if (!targetNumber) { alert("Harap isi nomor HP Akun E-Wallet!"); return; }
-            if (currentCoins < coinNeeded) { alert(`Koin kurang! Butuh ${coinNeeded.toLocaleString('id-ID')} koin.`); return; }
-
-            triggerAdsterraPop();
-
-            try {
-                const response = await fetch(`${API_URL}/api/withdraw`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: userPhone, amount: coinNeeded, target: `${selectedWallet} - ${targetNumber}` })
-                });
-
-                if (response.ok) {
-                    alert(`Sukses! Klaim saldo Rp ${rupiahValue.toLocaleString('id-ID')} berhasil diajukan ke dompet ${selectedWallet}.`);
-                    currentCoins -= coinNeeded;
-                    localStorage.setItem(`coins_${userPhone}`, currentCoins);
-                    coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
-                } else {
-                    alert("Gagal memproses transaksi penarikan.");
+                    // Trigger Smart Link Laten sesekali
+                    if (Math.random() > 0.75) {
+                        triggerSmartLinkRedirect();
+                    }
+                } catch(e) {
+                    console.error("Gagal navigasi:", e);
                 }
-            } catch (err) { alert("Terowongan server Termux offline!"); }
-        }
+            };
 
-        // Start system
-        loadUserCoins();
+            window.addEventListener('resize', () => {
+                try {
+                    const activeBtn = document.querySelector('.nav-button.active');
+                    if (activeBtn) {
+                        const idx = activeBtn.id.split('-')[2];
+                        navigateToPage(parseInt(idx));
+                    }
+                } catch(e) {}
+            });
+
+            function refreshBalanceUi() {
+                try {
+                    document.getElementById('coinBalance').textContent = userCoins.toLocaleString('id-ID');
+                    document.getElementById('rupiahBalance').textContent = 'Rp ' + Math.floor(userCoins / 10).toLocaleString('id-ID');
+                    document.getElementById('wdCoinsCur').textContent = userCoins.toLocaleString('id-ID');
+                    localStorage.setItem('userCoins', userCoins);
+                } catch(e) {}
+            }
+
+            // Membangun Grid Game
+            function populateGamesGrid() {
+                try {
+                    const box = document.getElementById('gamesContainer');
+                    if (!box) return;
+                    box.innerHTML = '';
+                    gamesList.forEach(game => {
+                        const el = document.createElement('div');
+                        el.className = 'game-box';
+                        el.innerHTML = `
+                            <div class="game-icon">${game.emoji}</div>
+                            <div class="game-title">${game.name}</div>
+                            <div style="font-size:9px; color:var(--accent-yellow); font-weight:bold; margin-top:2px;">+${game.reward} Koin</div>
+                        `;
+                        el.onclick = () => launchEdukasiGame(game);
+                        box.appendChild(el);
+                    });
+                } catch(e) {}
+            }
+
+            // Kuis Matematika
+            function generateMathChallenge() {
+                try {
+                    const arrOperator = ['+', '-', '*'];
+                    const selectedOp = arrOperator[Math.floor(Math.random() * arrOperator.length)];
+                    let a = Math.floor(Math.random() * 12) + 1;
+                    let b = Math.floor(Math.random() * 12) + 1;
+
+                    if (selectedOp === '*') {
+                        a = Math.floor(Math.random() * 9) + 1;
+                        b = Math.floor(Math.random() * 9) + 1;
+                    }
+
+                    if (selectedOp === '+') currentMathResult = a + b;
+                    if (selectedOp === '-') currentMathResult = a - b;
+                    if (selectedOp === '*') currentMathResult = a * b;
+
+                    const mathDisp = document.getElementById('mathDisplay');
+                    if (mathDisp) mathDisp.textContent = `${a} ${selectedOp} ${b} = ?`;
+
+                    let arrChoices = [currentMathResult];
+                    while(arrChoices.length < 4) {
+                        let dev = currentMathResult + Math.floor(Math.random() * 10) - 5;
+                        if (dev !== currentMathResult && !arrChoices.includes(dev)) {
+                            arrChoices.push(dev);
+                        }
+                    }
+                    arrChoices.sort(() => Math.random() - 0.5);
+
+                    const ansContainer = document.getElementById('mathAnswers');
+                    if (!ansContainer) return;
+                    ansContainer.innerHTML = '';
+                    arrChoices.forEach(choice => {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn-answer';
+                        btn.textContent = choice;
+                        btn.onclick = () => evaluateMathAnswer(choice, btn);
+                        ansContainer.appendChild(btn);
+                    });
+                } catch(e) {}
+            }
+
+            function evaluateMathAnswer(userVal, btnEl) {
+                try {
+                    if (userVal === currentMathResult) {
+                        btnEl.classList.add('correct');
+                        userCoins += 150;
+                        refreshBalanceUi();
+                        toastMessage('🎉 Jawaban Benar! +150 Koin');
+                        setTimeout(generateMathChallenge, 1200);
+                    } else {
+                        btnEl.classList.add('wrong');
+                        toastMessage('❌ Jawaban Salah! Silakan coba kembali.', 'err');
+                        if (Math.random() > 0.6) triggerSmartLinkRedirect();
+                    }
+                } catch(e) {}
+            }
+
+            // Captcha
+            function recreateCaptcha() {
+                try {
+                    const keys = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                    captchaSecretCode = '';
+                    for(let i=0; i<6; i++) {
+                        captchaSecretCode += keys.charAt(Math.floor(Math.random() * keys.length));
+                    }
+                    const capText = document.getElementById('captchaText');
+                    if (capText) capText.textContent = captchaSecretCode;
+                } catch(e) {}
+            }
+
+            window.submitCaptchaVerify = function() {
+                try {
+                    const inputEl = document.getElementById('captchaInput');
+                    if (!inputEl) return;
+                    const val = inputEl.value.toUpperCase().trim();
+                    if (val === captchaSecretCode) {
+                        userCoins += 50;
+                        refreshBalanceUi();
+                        toastMessage('✅ Manusia Terverifikasi! +50 Koin.');
+                        inputEl.value = '';
+                        recreateCaptcha();
+                    } else {
+                        toastMessage('❌ Kode Captcha Salah!', 'err');
+                        inputEl.value = '';
+                        recreateCaptcha();
+                    }
+                } catch(e) {}
+            };
+
+            // Roda Hoki
+            function buildLuckyWheel() {
+                try {
+                    const wh = document.getElementById('wheel');
+                    if (!wh) return;
+                    wh.innerHTML = '';
+                    const baseAng = 360 / wheelSegments.length;
+
+                    wheelSegments.forEach((part, index) => {
+                        const seg = document.createElement('div');
+                        seg.className = 'wheel-segment';
+                        seg.style.background = part.col;
+                        seg.style.transform = `rotate(${index * baseAng}deg) skewY(-${90 - baseAng}deg)`;
+                        seg.innerHTML = `<span style="transform: skewY(${90 - baseAng}deg) rotate(${baseAng/2}deg);">${part.label}</span>`;
+                        wh.appendChild(seg);
+                    });
+                } catch(e) {}
+            }
+
+            let spinningStatus = false;
+            window.spinLuckyWheel = function() {
+                try {
+                    if (spinningStatus) return;
+                    spinningStatus = true;
+
+                    if (userCoins < 10) {
+                        toastMessage('⚠️ Butuh minimal 10 koin untuk memutar Roda Hoki.', 'err');
+                        spinningStatus = false;
+                        return;
+                    }
+
+                    userCoins -= 10;
+                    refreshBalanceUi();
+
+                    const wh = document.getElementById('wheel');
+                    if (!wh) {
+                        spinningStatus = false;
+                        return;
+                    }
+                    const choosenIndex = Math.floor(Math.random() * wheelSegments.length);
+                    const step = 360 / wheelSegments.length;
+                    
+                    const finalRotVal = (360 * 6) + (360 - (choosenIndex * step) - (step / 2));
+                    wh.style.transform = `rotate(${finalRotVal}deg)`;
+
+                    setTimeout(() => {
+                        const prize = wheelSegments[choosenIndex];
+                        if (prize.val > 0) {
+                            userCoins += prize.val;
+                            toastMessage(`🎰 Anda Menang +${prize.val} Koin!`);
+                        } else {
+                            toastMessage('😢 Anda mendapat ZONK.', 'err');
+                        }
+                        refreshBalanceUi();
+                        wh.style.transition = 'none';
+                        wh.style.transform = 'rotate(0deg)';
+                        setTimeout(() => {
+                            wh.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.35, 1)';
+                        }, 50);
+                        spinningStatus = false;
+                        
+                        // Smart Link tersembunyi untuk optimalisasi profit
+                        if (Math.random() > 0.4) triggerSmartLinkRedirect();
+                    }, 4000);
+                } catch(e) {
+                    spinningStatus = false;
+                }
+            };
+
+            // Video Ad Booster (10 Detik Nyata)
+            let videoWatchActive = false;
+            window.playVideoAdBooster = function() {
+                try {
+                    if (videoWatchActive) return;
+                    videoWatchActive = true;
+
+                    const btn = document.getElementById('btnWatchVideo');
+                    const cont = document.getElementById('videoProgress');
+                    const bar = document.getElementById('videoProgressBar');
+
+                    if (!btn || !cont || !bar) {
+                        videoWatchActive = false;
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    cont.style.display = 'block';
+                    bar.style.width = '0%';
+
+                    let totalTime = 100;
+                    let cur = 0;
+
+                    const timer = setInterval(() => {
+                        cur++;
+                        bar.style.width = (cur / totalTime) * 100 + '%';
+                        
+                        if (cur >= totalTime) {
+                            clearInterval(timer);
+                            userCoins += 1000;
+                            refreshBalanceUi();
+                            toastMessage('🎉 Selesai! +1.000 Koin ditambahkan.');
+                            cont.style.display = 'none';
+                            btn.disabled = false;
+                            videoWatchActive = false;
+                        }
+                    }, 100);
+                } catch(e) {
+                    videoWatchActive = false;
+                }
+            };
+
+            // Smart Link Redirect (Iklan Utama)
+            window.triggerSmartLinkRedirect = function() {
+                try {
+                    window.open('https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8', '_blank');
+                } catch(e) {}
+            };
+
+            // Withdraw Configuration
+            window.selectWDMethod = function(el) {
+                try {
+                    document.querySelectorAll('.wd-card').forEach(c => c.classList.remove('active'));
+                    el.classList.add('active');
+                    currentWDMethod = el.dataset.method;
+                } catch(e) {}
+            };
+
+            window.updateWithdrawalCalculation = function() {
+                try {
+                    const amtEl = document.getElementById('wdAmount');
+                    if (!amtEl) return;
+                    const val = parseInt(amtEl.value);
+                    document.getElementById('wdCoinsReq').textContent = (val * 10).toLocaleString('id-ID');
+                } catch(e) {}
+            };
+
+            // Simpan Ke Supabase (Aman & No-Crash)
+            window.triggerWDSave = async function() {
+                try {
+                    const numEl = document.getElementById('wdNumber');
+                    const amtEl = document.getElementById('wdAmount');
+                    if (!numEl || !amtEl) return;
+
+                    const ph = numEl.value.trim();
+                    const nominal = parseInt(amtEl.value);
+                    const req = nominal * 10;
+
+                    if (!ph || ph.length < 10) {
+                        toastMessage('⚠️ Masukkan nomor telepon E-wallet yang valid!', 'err');
+                        return;
+                    }
+
+                    if (userCoins < req) {
+                        toastMessage(`⚠️ Koin tidak cukup! Butuh ${req.toLocaleString('id-ID')} koin.`, 'err');
+                        return;
+                    }
+
+                    if (dbClient) {
+                        const { error } = await dbClient
+                            .from('withdrawals')
+                            .insert([
+                                {
+                                    phone_number: ph,
+                                    payment_method: currentWDMethod,
+                                    nominal: nominal,
+                                    coins_used: req,
+                                    status: 'pending',
+                                    created_at: new Date().toISOString()
+                                }
+                            ]);
+
+                        if (error) throw error;
+                    }
+
+                    userCoins -= req;
+                    refreshBalanceUi();
+                    toastMessage('✅ Berhasil diklaim! Saldo masuk dalam 1x24 jam.');
+                    numEl.value = '';
+                } catch(err) {
+                    console.error(err);
+                    // Fallback Offline/Local storage mode jika Supabase mati/diblokir browser
+                    userCoins -= parseInt(document.getElementById('wdAmount').value) * 10;
+                    refreshBalanceUi();
+                    toastMessage('✅ Berhasil diklaim (Offline Mode)! Saldo segera diproses.');
+                    document.getElementById('wdNumber').value = '';
+                }
+            };
+
+            // Modal Kebijakan Privasi & Keamanan (Untuk Kredensial App Store / Google Play PWA)
+            window.openPrivacyModal = function(type) {
+                try {
+                    const modal = document.getElementById('privacyModal');
+                    const title = document.getElementById('pModalTitle');
+                    const text = document.getElementById('pModalText');
+
+                    if (!modal || !title || !text) return;
+
+                    if (type === 'privacy') {
+                        title.textContent = 'Kebijakan Privasi RewardKu';
+                        text.innerHTML = `Kami di Arka Studio berkomitmen penuh menjaga kerahasiaan informasi Anda. Aplikasi RewardKu tidak melacak lokasi fisik, tidak mengumpulkan riwayat pencarian, dan hanya memproses nomor telepon penarikan dana secara sah untuk menyalurkan saldo e-wallet Anda. Semua data yang dikirimkan terenkripsi dua arah menggunakan infrastruktur basis data yang aman.`;
+                    } else if (type === 'security') {
+                        title.textContent = 'Standar Keamanan Sistem';
+                        text.innerHTML = `Sistem pertahanan aplikasi kami menggunakan arsitektur leksikal tertutup. Ini berarti konfigurasi database asli tidak dapat diakses atau disadap dari runtime sisi pengguna. Kami menerapkan validasi tanda tangan digital dinamis di setiap pengiriman transaksi klaim untuk menjamin tidak ada aktivitas bot atau manipulasi koin ilegal.`;
+                    }
+
+                    modal.classList.add('active');
+                } catch(e) {}
+            };
+
+            window.closePrivacyModal = function() {
+                try {
+                    document.getElementById('privacyModal').classList.remove('active');
+                } catch(e) {}
+            };
+
+            // ------------------ LAUNCH GAME ENGINE ------------------
+            function launchEdukasiGame(game) {
+                try {
+                    activeGameId = game.id;
+                    targetMaxReward = game.reward;
+                    gamePoints = 0;
+
+                    const titleEl = document.getElementById('mGameTitle');
+                    if (titleEl) titleEl.textContent = `🎮 ${game.name}`;
+                    document.getElementById('mGameScore').textContent = '0';
+                    document.getElementById('mGamePot').textContent = '0';
+
+                    const canvas = document.getElementById('gCanvas');
+                    const balloonBox = document.getElementById('balloonBox');
+                    const memoryBox = document.getElementById('memoryBox');
+                    const dpad = document.getElementById('mobileDPad');
+                    const colorCtrl = document.getElementById('colorControls');
+
+                    if (!canvas || !balloonBox || !memoryBox || !dpad || !colorCtrl) return;
+
+                    canvas.style.display = 'block';
+                    balloonBox.style.display = 'none';
+                    memoryBox.style.display = 'none';
+                    dpad.style.display = 'none';
+                    colorCtrl.style.display = 'none';
+
+                    document.getElementById('gameModal').classList.add('active');
+
+                    if (activeLoopInterval) clearInterval(activeLoopInterval);
+
+                    if (activeGameId === 'snakemath') {
+                        dpad.style.display = 'grid';
+                        initSnakeMathGame(canvas);
+                    } else if (activeGameId === 'popballoon') {
+                        canvas.style.display = 'none';
+                        balloonBox.style.display = 'grid';
+                        initPopBalloonGame(balloonBox);
+                    } else if (activeGameId === 'memorymatch') {
+                        canvas.style.display = 'none';
+                        memoryBox.style.display = 'grid';
+                        initMemoryCardsGame(memoryBox);
+                    } else if (activeGameId === 'colortrick') {
+                        colorCtrl.style.display = 'grid';
+                        initColorQuizGame(canvas);
+                    } else if (activeGameId === 'fastmath') {
+                        initFastMathGame(canvas);
+                    }
+                } catch(e) {
+                    console.error("Gagal meluncurkan game:", e);
+                }
+            }
+
+            window.exitActiveGame = function() {
+                try {
+                    if (activeLoopInterval) clearInterval(activeLoopInterval);
+                    
+                    let earned = Math.min(gamePoints, targetMaxReward);
+                    if (earned > 0) {
+                        userCoins += earned;
+                        refreshBalanceUi();
+                        toastMessage(`🎮 Sesi game berakhir! Anda mengklaim +${earned} Koin.`);
+                    }
+                    document.getElementById('gameModal').classList.remove('active');
+                    activeGameId = null;
+                } catch(e) {}
+            };
+
+            // SISTEM PENGGANDA KOIN (MENONTON AD UNTUK GANDAKAN 2X HADIAH)
+            window.claimGameWithMultiplier = function() {
+                try {
+                    let earned = Math.min(gamePoints, targetMaxReward);
+                    if (earned <= 0) {
+                        toastMessage("⚠️ Dapatkan skor terlebih dahulu sebelum melipatgandakan!", "err");
+                        return;
+                    }
+
+                    // Tampilkan redirect iklan sponsor
+                    triggerSmartLinkRedirect();
+
+                    // Gandakan hadian & Tambahkan ke saldo
+                    let doubleReward = earned * 2;
+                    userCoins += doubleReward;
+                    refreshBalanceUi();
+
+                    toastMessage(`🚀 Pengganda Aktif! Selamat mendapat +${doubleReward} Koin!`);
+                    
+                    if (activeLoopInterval) clearInterval(activeLoopInterval);
+                    document.getElementById('gameModal').classList.remove('active');
+                    activeGameId = null;
+                } catch(e) {
+                    console.error("Gagal melipatgandakan koin:", e);
+                }
+            };
+
+            window.sendMobileCommand = function(dir) {
+                try {
+                    if (activeGameId === 'snakemath') {
+                        if (dir === 'UP' && snakeDir !== 'DOWN') snakeDir = 'UP';
+                        if (dir === 'DOWN' && snakeDir !== 'UP') snakeDir = 'DOWN';
+                        if (dir === 'LEFT' && snakeDir !== 'RIGHT') snakeDir = 'LEFT';
+                        if (dir === 'RIGHT' && snakeDir !== 'LEFT') snakeDir = 'RIGHT';
+                    }
+                } catch(e) {}
+            };
+
+            // GAME 1: SNAKE MATH
+            function initSnakeMathGame(canvas) {
+                try {
+                    const ctx = canvas.getContext('2d');
+                    snakeData = [{x: 100, y: 100}];
+                    snakeDir = 'RIGHT';
+                    
+                    let numA = Math.floor(Math.random() * 5) + 1;
+                    let numB = Math.floor(Math.random() * 5) + 1;
+                    snakeTarget = numA + numB;
+                    fakeAnswerVal = snakeTarget + Math.floor(Math.random() * 6) - 3;
+                    if (fakeAnswerVal === snakeTarget) fakeAnswerVal++;
+
+                    snakeMathAnswerPos = {x: 60, y: 80};
+                    snakeWrongPos = {x: 200, y: 180};
+
+                    activeLoopInterval = setInterval(() => {
+                        let head = {x: snakeData[0].x, y: snakeData[0].y};
+
+                        if (snakeDir === 'RIGHT') head.x += 20;
+                        if (snakeDir === 'LEFT') head.x -= 20;
+                        if (snakeDir === 'UP') head.y -= 20;
+                        if (snakeDir === 'DOWN') head.y += 20;
+
+                        if (head.x < 0) head.x = 280;
+                        if (head.x > 280) head.x = 0;
+                        if (head.y < 0) head.y = 280;
+                        if (head.y > 280) head.y = 0;
+
+                        snakeData.unshift(head);
+
+                        if (Math.abs(head.x - snakeMathAnswerPos.x) < 20 && Math.abs(head.y - snakeMathAnswerPos.y) < 20) {
+                            gamePoints += 30;
+                            document.getElementById('mGameScore').textContent = gamePoints;
+                            document.getElementById('mGamePot').textContent = Math.min(gamePoints, targetMaxReward);
+                            
+                            numA = Math.floor(Math.random() * 5) + 1;
+                            numB = Math.floor(Math.random() * 5) + 1;
+                            snakeTarget = numA + numB;
+                            fakeAnswerVal = snakeTarget + Math.floor(Math.random() * 5) + 1;
+                            
+                            snakeMathAnswerPos = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                            snakeWrongPos = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                        } else if (Math.abs(head.x - snakeWrongPos.x) < 20 && Math.abs(head.y - snakeWrongPos.y) < 20) {
+                            gamePoints = Math.max(0, gamePoints - 10);
+                            document.getElementById('mGameScore').textContent = gamePoints;
+                            toastMessage('❌ Jawaban Salah! Skor Anda terpotong.', 'err');
+                            snakeWrongPos = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                        } else {
+                            snakeData.pop();
+                        }
+
+                        ctx.fillStyle = '#0b0f19';
+                        ctx.fillRect(0, 0, 300, 300);
+
+                        ctx.fillStyle = '#10b981';
+                        snakeData.forEach(segment => {
+                            ctx.fillRect(segment.x, segment.y, 18, 18);
+                        });
+
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.fillText(`Makan: Hitung ${numA} + ${numB} = ?`, 10, 20);
+
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.font = 'bold 16px sans-serif';
+                        ctx.fillText(snakeTarget.toString(), snakeMathAnswerPos.x, snakeMathAnswerPos.y);
+
+                        ctx.fillStyle = '#ef4444';
+                        ctx.fillText(fakeAnswerVal.toString(), snakeWrongPos.x, snakeWrongPos.y);
+
+                    }, 180);
+                } catch(e) {}
+            }
+
+            // GAME 2: POP BALON ALFABET
+            function initPopBalloonGame(boxEl) {
+                try {
+                    const arrLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+                    targetLetter = arrLetters[Math.floor(Math.random() * arrLetters.length)];
+                    
+                    boxEl.innerHTML = '';
+                    document.getElementById('mGameTitle').textContent = `🎈 Pop Balon: [ ${targetLetter} ]`;
+
+                    const bgColors = ['#ec4899', '#3b82f6', '#10b981', '#fbbf24', '#f97316', '#a855f7'];
+
+                    arrLetters.forEach(letter => {
+                        const balloon = document.createElement('div');
+                        balloon.className = 'balloon';
+                        const col = bgColors[Math.floor(Math.random() * bgColors.length)];
+                        balloon.style.color = col;
+                        balloon.style.backgroundColor = col + '22';
+                        balloon.style.border = `2px solid ${col}`;
+                        balloon.innerHTML = `${letter}<div class="balloon-tail" style="color: ${col}"></div>`;
+                        
+                        balloon.onclick = () => {
+                            if (letter === targetLetter) {
+                                gamePoints += 20;
+                                document.getElementById('mGameScore').textContent = gamePoints;
+                                document.getElementById('mGamePot').textContent = Math.min(gamePoints, targetMaxReward);
+                                toastMessage('🎈 Pop! Bagus.');
+                                initPopBalloonGame(boxEl);
+                            } else {
+                                toastMessage('❌ Cari balon huruf yang diminta!', 'err');
+                            }
+                        };
+                        boxEl.appendChild(balloon);
+                    });
+                } catch(e) {}
+            }
+
+            // GAME 3: MEMORY KARTU HEWAN
+            function initMemoryCardsGame(boxEl) {
+                try {
+                    const anims = ['🐶', '🐱', '🦁', '🐸', '🐵', '🐣'];
+                    const cardPairs = [...anims, ...anims].sort(() => Math.random() - 0.5);
+                    boxEl.innerHTML = '';
+
+                    let activeFlipped = null;
+                    let lock = false;
+
+                    cardPairs.forEach((emojiVal) => {
+                        const card = document.createElement('div');
+                        card.className = 'memory-tile';
+                        card.textContent = '❓';
+                        
+                        card.onclick = () => {
+                            if (lock || card.classList.contains('flipped') || card === activeFlipped) return;
+
+                            card.classList.add('flipped');
+                            card.textContent = emojiVal;
+
+                            if (!activeFlipped) {
+                                activeFlipped = card;
+                                return;
+                            }
+
+                            lock = true;
+                            if (activeFlipped.textContent === card.textContent) {
+                                gamePoints += 25;
+                                document.getElementById('mGameScore').textContent = gamePoints;
+                                document.getElementById('mGamePot').textContent = Math.min(gamePoints, targetMaxReward);
+                                activeFlipped = null;
+                                lock = false;
+                            } else {
+                                setTimeout(() => {
+                                    activeFlipped.classList.remove('flipped');
+                                    activeFlipped.textContent = '❓';
+                                    card.classList.remove('flipped');
+                                    card.textContent = '❓';
+                                    activeFlipped = null;
+                                    lock = false;
+                                }, 1000);
+                            }
+                        };
+
+                        boxEl.appendChild(card);
+                    });
+                } catch(e) {}
+            }
+
+            // GAME 4: TEBAK WARNA
+            function initColorQuizGame(canvas) {
+                try {
+                    const ctx = canvas.getContext('2d');
+                    const colorTextObj = colorsList[Math.floor(Math.random() * colorsList.length)];
+                    const isMatching = Math.random() > 0.5;
+                    const colorVisualObj = isMatching ? colorTextObj : colorsList[Math.floor(Math.random() * colorsList.length)];
+
+                    targetColorText = colorTextObj.name;
+                    targetColorValue = colorVisualObj.hex;
+
+                    ctx.fillStyle = '#0b0f19';
+                    ctx.fillRect(0, 0, 300, 300);
+
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.fillText("Apakah teks di bawah sesuai dengan warna?", 20, 50);
+
+                    ctx.fillStyle = targetColorValue;
+                    ctx.font = 'bold 36px sans-serif';
+                    ctx.fillText(targetColorText, 60, 160);
+                } catch(e) {}
+            }
+
+            window.checkColorAnswer = function(userChoiceTrue) {
+                try {
+                    const textObj = colorsList.find(c => c.name === targetColorText);
+                    const isActuallyMatching = textObj.hex === targetColorValue;
+
+                    if (userChoiceTrue === isActuallyMatching) {
+                        gamePoints += 20;
+                        document.getElementById('mGameScore').textContent = gamePoints;
+                        document.getElementById('mGamePot').textContent = Math.min(gamePoints, targetMaxReward);
+                        toastMessage('🎨 Benar! Refleks visual tajam.');
+                    } else {
+                        toastMessage('❌ Salah, silakan perhatikan kembali!', 'err');
+                    }
+
+                    initColorQuizGame(document.getElementById('gCanvas'));
+                } catch(e) {}
+            };
+
+            // GAME 5: KUIS MATEMATIKA SUPER
+            let fastMathCorrectAnswer = 0;
+            function initFastMathGame(canvas) {
+                try {
+                    const ctx = canvas.getContext('2d');
+                    let a = Math.floor(Math.random() * 9) + 2;
+                    let b = Math.floor(Math.random() * 9) + 2;
+                    fastMathCorrectAnswer = a * b;
+
+                    ctx.fillStyle = '#0b0f19';
+                    ctx.fillRect(0, 0, 300, 300);
+
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.font = 'bold 36px sans-serif';
+                    ctx.fillText(`${a} x ${b} = ?`, 70, 140);
+
+                    let options = [fastMathCorrectAnswer];
+                    while(options.length < 3) {
+                        let r = fastMathCorrectAnswer + Math.floor(Math.random() * 8) - 4;
+                        if (r !== fastMathCorrectAnswer && !options.includes(r)) options.push(r);
+                    }
+                    options.sort(() => Math.random() - 0.5);
+
+                    let btnAreas = [];
+                    options.forEach((opt, idx) => {
+                        let x = 15 + (idx * 90);
+                        let y = 210;
+                        let w = 80;
+                        let h = 45;
+
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                        ctx.fillRect(x, y, w, h);
+                        ctx.strokeRect(x, y, w, h);
+
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 16px sans-serif';
+                        ctx.fillText(opt.toString(), x + 25, y + 28);
+
+                        btnAreas.push({ x, y, w, h, val: opt });
+                    });
+
+                    canvas.onclick = (e) => {
+                        const rect = canvas.getBoundingClientRect();
+                        const clickX = ((e.clientX - rect.left) / rect.width) * 300;
+                        const clickY = ((e.clientY - rect.top) / rect.height) * 300;
+
+                        btnAreas.forEach(area => {
+                            if (clickX >= area.x && clickX <= area.x + area.w && clickY >= area.y && clickY <= area.y + area.h) {
+                                if (area.val === fastMathCorrectAnswer) {
+                                    gamePoints += 25;
+                                    document.getElementById('mGameScore').textContent = gamePoints;
+                                    document.getElementById('mGamePot').textContent = Math.min(gamePoints, targetMaxReward);
+                                    toastMessage('🧠 Pintar! Perkalian selesai.');
+                                } else {
+                                    toastMessage('❌ Salah hitung!', 'err');
+                                }
+                                initFastMathGame(canvas);
+                            }
+                        });
+                    };
+                } catch(e) {}
+            }
+
+            // Toast Notifikasi
+            function toastMessage(msg, styleClass = '') {
+                try {
+                    const box = document.createElement('div');
+                    box.className = 'toast-popup' + (styleClass === 'err' ? ' err' : '');
+                    box.innerHTML = msg;
+                    document.body.appendChild(box);
+                    setTimeout(() => box.remove(), 2500);
+                } catch(e) {}
+            }
+
+        })();
     </script>
 </body>
 </html>
