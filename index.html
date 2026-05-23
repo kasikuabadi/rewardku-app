@@ -10,15 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== BASE RESET - FIXED: user-select hanya untuk non-interactive ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        /* Non-interactive elements only */
         body, .card-ui, .news-text, .achievement-desc, .footer-arka, .logo-text, .quest-title {
             user-select: none; -webkit-user-select: none;
         }
-        
-        /* Interactive elements MUST be selectable/clickable */
         button, input, select, .btn-claim, .nav-button, .game-box, .cuan-booster-box, 
         .quest-reward, .footer-link-btn, .balloon, .memory-tile, .dpad-btn, .wd-card,
         .btn-answer, .btn-close, .achievement-claim, .bonus-card {
@@ -26,7 +21,6 @@
             cursor: pointer; -webkit-tap-highlight-color: rgba(251, 191, 36, 0.2);
             touch-action: manipulation;
         }
-
         :root {
             --primary-bg: #070a13; --secondary-bg: #0e1322; --card-bg: #161f38;
             --accent-yellow: #fbbf24; --accent-orange: #f97316; --accent-green: #10b981;
@@ -37,17 +31,15 @@
             --gradient-dark: linear-gradient(180deg, #0e1322 0%, #070a13 100%);
             --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
         }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--gradient-dark); min-height: 100vh; color: var(--text-primary);
             display: flex; flex-direction: column; overscroll-behavior-y: contain;
         }
-
-        /* Pull-to-Refresh - FIXED: tidak blokir tap kecil */
         .ptr-indicator {
             position: fixed; top: calc(var(--safe-top) + 60px); left: 50%;
-            transform: translateX(-50%) translateY(-100%);            background: var(--accent-yellow); color: #000; padding: 8px 20px;
+            transform: translateX(-50%) translateY(-100%);
+            background: var(--accent-yellow); color: #000; padding: 8px 20px;
             border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 9999;
             opacity: 0; transition: opacity 0.2s, transform 0.2s;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 6px;
@@ -55,10 +47,7 @@
         }
         .ptr-indicator.active { opacity: 1; transform: translateX(-50%) translateY(0); }
         .ptr-indicator.refreshing { background: var(--accent-green); }
-
-        /* Ads */
-        .top-ad-sticky {
-            background: #000; display: flex; justify-content: center; align-items: center;
+        .top-ad-sticky {            background: #000; display: flex; justify-content: center; align-items: center;
             min-height: 50px; max-height: 60px; border-bottom: 2px solid var(--accent-yellow);
             z-index: 1001; flex-shrink: 0; padding-top: var(--safe-top); overflow: hidden;
             pointer-events: auto;
@@ -77,8 +66,6 @@
             width: 100%; max-width: 468px; height: 60px;
             display: flex; justify-content: center; align-items: center;
         }
-
-        /* Header & Nav */
         .header {
             background: rgba(14, 19, 34, 0.98); backdrop-filter: blur(12px);
             padding: 8px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -96,7 +83,8 @@
         }
         .logo-text h1 { font-size: 13px; font-weight: 800; color: var(--accent-yellow); line-height: 1; }
         .logo-text p { font-size: 7px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .header-wallet { display: flex; gap: 3px; }        .wallet-card {
+        .header-wallet { display: flex; gap: 3px; }
+        .wallet-card {
             background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2);
             padding: 3px 6px; border-radius: 8px; display: flex; align-items: center; gap: 3px;
             font-size: 10px; font-weight: 700; min-width: 70px; justify-content: center;
@@ -104,13 +92,11 @@
         .wallet-card.rupiah {
             background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: var(--accent-green);
         }
-
         .top-nav-bar {
             background: rgba(14, 19, 34, 0.92); backdrop-filter: blur(8px);
             padding: 4px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 999; flex-shrink: 0;
-        }
-        .top-nav-container {
+        }        .top-nav-container {
             max-width: 420px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr);
             gap: 2px; background: rgba(0, 0, 0, 0.3); padding: 3px; border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -125,8 +111,6 @@
         .nav-button.active {
             background: var(--gradient-primary); color: #000; box-shadow: var(--neon-glow);
         }
-
-        /* Pages & Cards */
         .app-pages-container {
             flex-grow: 1; display: flex; width: 100%; overflow-x: hidden;
             scroll-behavior: smooth; position: relative;
@@ -145,9 +129,8 @@
             font-size: 11px; font-weight: 800; color: var(--accent-yellow);
             display: flex; align-items: center; gap: 4px; margin-bottom: 8px;
             border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;
-            text-transform: uppercase; letter-spacing: 0.3px;        }
-
-        /* Components */
+            text-transform: uppercase; letter-spacing: 0.3px;
+        }
         .cuan-booster-box {
             background: linear-gradient(135deg, rgba(236,72,153,0.12) 0%, rgba(249,115,22,0.12) 100%);
             border: 1px dashed var(--accent-pink); padding: 10px; border-radius: 12px;
@@ -162,8 +145,7 @@
         .progress-container {
             background: rgba(255,255,255,0.08); height: 4px; border-radius: 2px;
             margin: 8px 0; overflow: hidden;
-        }
-        .progress-bar {
+        }        .progress-bar {
             background: var(--gradient-primary); width: 0%; height: 100%;
             transition: width 0.3s ease;
         }
@@ -177,8 +159,6 @@
         .btn-claim:disabled {
             background: #4b5563; color: #9ca3af; box-shadow: none; cursor: not-allowed;
         }
-
-        /* Quiz & Captcha */
         .math-box {
             background: rgba(0,0,0,0.3); border: 1px dashed rgba(251,191,36,0.2);
             border-radius: 10px; padding: 12px; font-size: 20px; font-weight: 800;
@@ -194,7 +174,8 @@
         .btn-answer.correct { background: var(--accent-green) !important; color: #000 !important; }
         .btn-answer.wrong { background: #ef4444 !important; color: #fff !important; }
         .captcha-box {
-            background: linear-gradient(135deg, #1e1b4b 0%, #2e1044 100%);            padding: 10px; border-radius: 8px; font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e1b4b 0%, #2e1044 100%);
+            padding: 10px; border-radius: 8px; font-family: 'Courier New', monospace;
             font-size: 20px; font-weight: 800; letter-spacing: 4px; text-align: center;
             color: var(--accent-yellow); text-shadow: 0 0 6px rgba(251,191,36,0.4);
             border: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;
@@ -204,8 +185,6 @@
             border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
             padding: 8px; color: #fff; font-size: 14px; text-align: center; margin-bottom: 8px;
         }
-
-        /* Wheel & Games */
         .wheel-area { position: relative; width: 160px; height: 160px; margin: 8px auto; }
         .wheel-body {
             width: 100%; height: 100%; border-radius: 50%;
@@ -215,8 +194,7 @@
         .wheel-segment {
             position: absolute; width: 50%; height: 50%;
             transform-origin: right bottom; top: 0; left: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
+            display: flex; align-items: center; justify-content: center;        }
         .wheel-segment span {
             color: #000; font-weight: 800; font-size: 9px;
             position: absolute; left: 12px; top: 14px;
@@ -235,15 +213,14 @@
         .game-box:active { transform: scale(0.97); border-color: var(--accent-yellow); }
         .game-icon { font-size: 22px; margin-bottom: 2px; }
         .game-title { font-size: 10px; font-weight: 700; }
-
-        /* Withdraw & Quests */
         .leader-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px;
         }
         .wd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px; }
         .wd-card {
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);            border-radius: 8px; padding: 6px; text-align: center; font-size: 10px; font-weight: bold;
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 6px; text-align: center; font-size: 10px; font-weight: bold;
         }
         .wd-card.active { border-color: var(--accent-yellow); background: rgba(251,191,36,0.08); }
         .wd-card i { display: block; font-size: 14px; margin-bottom: 2px; }
@@ -266,14 +243,11 @@
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
             padding: 6px 8px; border-radius: 8px; margin-bottom: 4px;
         }
-        .quest-title { font-size: 10px; font-weight: 700; }
-        .quest-reward {
+        .quest-title { font-size: 10px; font-weight: 700; }        .quest-reward {
             font-size: 9px; color: var(--accent-yellow); font-weight: 800;
             background: rgba(251,191,36,0.1); border: 1px solid var(--accent-yellow);
             padding: 3px 6px; border-radius: 5px;
         }
-
-        /* Footer & Toast */
         .footer-arka {
             background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.02);
             padding: 10px 12px; text-align: center; font-size: 9px; color: var(--text-secondary);
@@ -292,9 +266,8 @@
             z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             animation: popIn 0.25s cubic-bezier(0.16,1,0.3,1) forwards; pointer-events: none;
         }
-        .toast-popup.err { background: #ef4444; color: #fff; }        @keyframes popIn { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
-
-        /* Modal */
+        .toast-popup.err { background: #ef4444; color: #fff; }
+        @keyframes popIn { to { transform: translateX(-50%) translateY(0); opacity: 1; } }
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 2000;
@@ -312,8 +285,6 @@
             width: 24px; height: 24px; border-radius: 50%; font-size: 11px;
             display: flex; align-items: center; justify-content: center;
         }
-
-        /* Game Areas */
         .canvas-container {
             background: #000; border-radius: 8px; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.08); position: relative; margin-bottom: 8px;
@@ -321,8 +292,7 @@
         .canvas-element { width: 100%; aspect-ratio: 1; display: block; }
         .dpad-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 3px; max-width: 120px; margin: 0 auto 8px;
-        }
+            gap: 3px; max-width: 120px; margin: 0 auto 8px;        }
         .dpad-btn {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
             color: #fff; padding: 8px; border-radius: 6px; font-size: 12px;
@@ -341,7 +311,8 @@
         }
         .balloon {
             width: 40px; height: 52px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;            position: relative; display: flex; align-items: center; justify-content: center;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative; display: flex; align-items: center; justify-content: center;
             color: #fff; font-weight: 800; font-size: 14px;
             animation: float 2s ease-in-out infinite alternate;
         }
@@ -361,8 +332,6 @@
         }
         .memory-tile.flipped { background: #111827; border-color: var(--accent-yellow); }
         .multiplier-area { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-
-        /* Bonus & Achievement */
         .ad-tracker-card {
             background: #090e1a; border: 2px dashed rgba(251,191,36,0.3);
             border-radius: 10px; padding: 16px 12px; text-align: center; margin-bottom: 10px;
@@ -372,8 +341,7 @@
             margin: 10px 0; padding-left: 10px; line-height: 1.5;
         }
         .ad-instruction-list li { margin-bottom: 3px; }
-        .bonus-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 4px; }
-        .bonus-card {
+        .bonus-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 4px; }        .bonus-card {
             background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2);
             border-radius: 10px; padding: 8px; text-align: center;
         }
@@ -390,12 +358,12 @@
             width: 24px; height: 24px; border-radius: 50%;
             background: var(--gradient-primary);
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; flex-shrink: 0;        }
+            font-size: 12px; flex-shrink: 0;
+        }
         .achievement-info { flex: 1; }
         .achievement-title { font-size: 10px; font-weight: 700; }
         .achievement-desc { font-size: 8px; color: var(--text-secondary); }
         .achievement-claim { font-size: 9px; font-weight: 800; color: var(--accent-green); }
-
         @media (max-width: 360px) {
             .top-nav-container { gap: 1px; padding: 2px; }
             .nav-button { padding: 5px 1px; font-size: 7px; }
@@ -422,8 +390,7 @@
 
     <nav class="top-nav-bar"><div class="top-nav-container">
         <button class="nav-button active" onclick="nav(0)" id="nav-0"><i class="fas fa-home"></i><span>Home</span></button>
-        <button class="nav-button" onclick="nav(1)" id="nav-1"><i class="fas fa-brain"></i><span>Kuis</span></button>
-        <button class="nav-button" onclick="nav(2)" id="nav-2"><i class="fas fa-sync-alt"></i><span>Spin</span></button>
+        <button class="nav-button" onclick="nav(1)" id="nav-1"><i class="fas fa-brain"></i><span>Kuis</span></button>        <button class="nav-button" onclick="nav(2)" id="nav-2"><i class="fas fa-sync-alt"></i><span>Spin</span></button>
         <button class="nav-button" onclick="nav(3)" id="nav-3"><i class="fas fa-gamepad"></i><span>Games</span></button>
         <button class="nav-button" onclick="nav(4)" id="nav-4"><i class="fas fa-wallet"></i><span>Tarik</span></button>
     </div></nav>
@@ -439,7 +406,8 @@
             </div>
             <div class="cuan-booster-box" onclick="openAd(500,'SmartLink')">
                 <div style="display:flex;align-items:center;gap:6px"><div style="font-size:20px">🚀</div><div><h4 style="font-size:11px;font-weight:800;color:var(--accent-pink)">CUAN EXTREME</h4><p style="font-size:8px;color:var(--text-secondary)">Klaim +500 koin instan!</p></div></div>
-                <i class="fas fa-chevron-right" style="color:var(--accent-pink);font-size:10px"></i>            </div>
+                <i class="fas fa-chevron-right" style="color:var(--accent-pink);font-size:10px"></i>
+            </div>
             <div class="card-ui">
                 <div class="card-title"><i class="fas fa-tasks"></i> Misi Harian</div>
                 <div class="quest-box"><div><div class="quest-title">3 Kuis Cepat</div><p style="font-size:8px;color:var(--text-secondary)">+300 Koin bonus</p></div><button class="quest-reward" onclick="nav(1)">+300</button></div>
@@ -471,8 +439,7 @@
                 <script src="https://revolthem.com/248658b5ecde7db9470724760291795c/invoke.js" async></script>
             </div></div>
             <footer class="footer-arka">
-                <p>© 2026 Arka Studio. All Rights Reserved.</p>
-                <p style="margin:3px 0">Enkripsi end-to-end • Data aman • No bot allowed</p>
+                <p>© 2026 Arka Studio. All Rights Reserved.</p>                <p style="margin:3px 0">Enkripsi end-to-end • Data aman • No bot allowed</p>
                 <div class="footer-links">
                     <button class="footer-link-btn" onclick="showPolicy('privacy')">Privasi</button>
                     <button class="footer-link-btn" onclick="showPolicy('security')">Keamanan</button>
@@ -488,7 +455,8 @@
         </section>
 
         <!-- PAGE 3: SPIN -->
-        <section class="app-page">            <div class="card-ui" style="text-align:center">
+        <section class="app-page">
+            <div class="card-ui" style="text-align:center">
                 <div class="card-title"><i class="fas fa-sync-alt"></i> Roda Hoki</div>
                 <div class="wheel-area"><div class="wheel-arrow"></div><div class="wheel-body" id="wheel"></div></div>
                 <button class="btn-claim" id="btnSpin" onclick="spinWheel()" style="margin-top:6px"><i class="fas fa-play"></i> Putar (-10 Koin)</button>
@@ -520,8 +488,7 @@
                 </div></div>
                 <div class="form-group"><label>Nomor HP</label><input type="tel" id="wdNum" placeholder="08XXXXXXXX" maxlength="13"></div>
                 <div class="form-group"><label>Nominal</label><select id="wdAmt" onchange="calcWD()"><option value="5000">Rp 5.000 (50K Koin)</option><option value="10000">Rp 10.000 (100K Koin)</option><option value="20000">Rp 20.000 (200K Koin)</option><option value="50000">Rp 50.000 (500K Koin)</option></select></div>
-                <div class="calc-box"><p>Koin Dibutuhkan: <strong id="wdNeed" style="color:var(--accent-orange)">50.000</strong></p><p>Saldo Anda: <strong id="wdHave" style="color:var(--accent-green)">0</strong></p></div>
-                <button class="btn-claim" onclick="submitWD()"><i class="fas fa-money-bill-wave"></i> Klaim Pencairan</button>
+                <div class="calc-box"><p>Koin Dibutuhkan: <strong id="wdNeed" style="color:var(--accent-orange)">50.000</strong></p><p>Saldo Anda: <strong id="wdHave" style="color:var(--accent-green)">0</strong></p></div>                <button class="btn-claim" onclick="submitWD()"><i class="fas fa-money-bill-wave"></i> Klaim Pencairan</button>
             </div>
         </section>
     </main>
@@ -537,7 +504,8 @@
         <div class="dpad-grid" id="dpad" style="display:none"><button class="dpad-btn dpad-up" onclick="cmd('UP')"><i class="fas fa-chevron-up"></i></button><button class="dpad-btn dpad-left" onclick="cmd('LEFT')"><i class="fas fa-chevron-left"></i></button><button class="dpad-btn dpad-right" onclick="cmd('RIGHT')"><i class="fas fa-chevron-right"></i></button><button class="dpad-btn dpad-down" onclick="cmd('DOWN')"><i class="fas fa-chevron-down"></i></button></div>
         <div class="double-btn-grid" id="colorBtns"><button class="dpad-btn" onclick="colorAns(true)" style="background:var(--accent-green);color:#000;font-weight:bold">Sesuai</button><button class="dpad-btn" onclick="colorAns(false)" style="background:#ef4444;color:#fff;font-weight:bold">Beda</button></div>
         <div class="multiplier-area">
-            <button class="btn-claim" onclick="doubleReward()" style="background:linear-gradient(135deg,#ec4899,#f97316);color:#fff"><i class="fas fa-star"></i> Gandakan 2x (Tonton Iklan)</button>            <button class="btn-claim" onclick="closeGame()" style="background:rgba(255,255,255,0.05);color:var(--text-secondary);box-shadow:none">Klaim Biasa</button>
+            <button class="btn-claim" onclick="doubleReward()" style="background:linear-gradient(135deg,#ec4899,#f97316);color:#fff"><i class="fas fa-star"></i> Gandakan 2x (Tonton Iklan)</button>
+            <button class="btn-claim" onclick="closeGame()" style="background:rgba(255,255,255,0.05);color:var(--text-secondary);box-shadow:none">Klaim Biasa</button>
         </div>
     </div></div>
 
@@ -569,191 +537,745 @@
         let spinHistory = JSON.parse(localStorage.getItem('rk_spin') || '[]');
         let mathAns = 0, captchaCode = '', wdMethod = 'DANA';
         let gameActive = null, gameScore = 0, gameMax = 0, gameLoop = null;
-        let adTimer = null, adSec = 15, adReward = 0, adReady = false;
-        const AD_LINK = 'https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8';
+        let adTimer = null, adSec = 15, adReward = 0, adReady = false;        const AD_LINK = 'https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8';
         const games = [{id:'snake',name:'Snake Matematika',emoji:'🐍',reward:180},{id:'balloon',name:'Pop Balon',emoji:'🎈',reward:120},{id:'memory',name:'Memori Hewan',emoji:'🐶',reward:150},{id:'color',name:'Tebak Warna',emoji:'🎨',reward:100},{id:'math',name:'Math Super',emoji:'🧠',reward:140}];
         const wheelParts = [{v:100,c:'#fbbf24',l:'100'},{v:50,c:'#f97316',l:'50'},{v:0,c:'#ef4444',l:'ZONK'},{v:300,c:'#10b981',l:'300'},{v:150,c:'#3b82f6',l:'150'},{v:500,c:'#ec4899',l:'500'}];
         const colors = [{n:'MERAH',h:'#ef4444'},{n:'BIRU',h:'#3b82f6'},{n:'HIJAU',h:'#10b981'},{n:'KUNING',h:'#fbbf24'}];
 
         // ===== DEBOUNCE SYSTEM =====
         let lastClick = {};
-        function debounce(id, ms=300){ const n=Date.now(); if(lastClick[id]&&n-lastClick[id]<ms)return false; lastClick[id]=n; return true; }
+        function debounce(id, ms){
+            ms = ms || 300;
+            var n = Date.now();
+            if(lastClick[id] && n - lastClick[id] < ms) return false;
+            lastClick[id] = n;
+            return true;
+        }
 
         // ===== INIT =====
-        window.addEventListener('load', ()=>{
-            updateBal(); renderGames(); buildWheel(); genMath(); genCap(); calcWD(); checkDaily();
-            initPTR(); initScrollRefresh();
-            setupModalClose('adModal'); setupModalClose('gameModal'); setupModalClose('policyModal');
+        window.addEventListener('load', function(){
+            updateBal();
+            renderGames();
+            buildWheel();
+            genMath();
+            genCap();
+            calcWD();
+            checkDaily();
+            initPTR();
+            initScrollRefresh();
+            setupModalClose('adModal');
+            setupModalClose('gameModal');
+            setupModalClose('policyModal');
         });
 
-        // ===== NAV & BALANCE =====        function nav(idx){ if(!debounce('nav'+idx,400))return;
-            const vp=document.getElementById('viewport'); vp.scrollTo({left:idx*vp.clientWidth,behavior:'smooth'});
-            document.querySelectorAll('.nav-button').forEach(b=>b.classList.remove('active'));
-            document.getElementById('nav-'+idx)?.classList.add('active');
-            if(Math.random()>0.9)openAd(100,'nav');
-        }
-        function updateBal(){
-            document.getElementById('coinBalance').textContent=coins.toLocaleString('id');
-            document.getElementById('rupiahBalance').textContent='Rp '+Math.floor(coins/10).toLocaleString('id');
-            document.getElementById('wdHave').textContent=coins.toLocaleString('id');
-            localStorage.setItem('rk_coins',coins);
+        // ===== NAV & BALANCE =====
+        function nav(idx){
+            if(!debounce('nav'+idx, 400)) return;
+            var vp = document.getElementById('viewport');
+            vp.scrollTo({left: idx * vp.clientWidth, behavior: 'smooth'});
+            document.querySelectorAll('.nav-button').forEach(function(b){ b.classList.remove('active'); });
+            var activeBtn = document.getElementById('nav-'+idx);
+            if(activeBtn) activeBtn.classList.add('active');
+            if(Math.random() > 0.9) openAd(100, 'nav');
         }
 
-        // ===== GAMES =====
-        function renderGames(){ const g=document.getElementById('gameGrid'); if(!g)return; g.innerHTML='';
-            games.forEach(x=>{ const e=document.createElement('div'); e.className='game-box';
-                e.innerHTML=`<div class="game-icon">${x.emoji}</div><div class="game-title">${x.name}</div><div style="font-size:8px;color:var(--accent-yellow);font-weight:bold;margin-top:1px">+${x.reward}</div>`;
-                e.onclick=()=>startGame(x); g.appendChild(e); });
+        function updateBal(){
+            document.getElementById('coinBalance').textContent = coins.toLocaleString('id');
+            document.getElementById('rupiahBalance').textContent = 'Rp ' + Math.floor(coins/10).toLocaleString('id');
+            document.getElementById('wdHave').textContent = coins.toLocaleString('id');
+            localStorage.setItem('rk_coins', coins);
+        }
+
+        // ===== GAMES =====        function renderGames(){
+            var g = document.getElementById('gameGrid');
+            if(!g) return;
+            g.innerHTML = '';
+            games.forEach(function(x){
+                var e = document.createElement('div');
+                e.className = 'game-box';
+                e.innerHTML = '<div class="game-icon">'+x.emoji+'</div><div class="game-title">'+x.name+'</div><div style="font-size:8px;color:var(--accent-yellow);font-weight:bold;margin-top:1px">+'+x.reward+'</div>';
+                e.onclick = function(){ startGame(x); };
+                g.appendChild(e);
+            });
         }
 
         // ===== ADS =====
-        function openAd(reward,mode){ if(!debounce('ad'+mode,1000))return;
-            adReward=reward; adSec=15; adReady=false;
-            document.getElementById('btnCancelAd').style.display='block'; document.getElementById('btnClaimAd').style.display='none';
-            updateAdUI(); document.getElementById('adModal').classList.add('active');
-            window.open(AD_LINK,'_blank','noopener,noreferrer');
-            if(adTimer)clearInterval(adTimer);
-            adTimer=setInterval(()=>{ adSec--; updateAdUI();
-                if(adSec<=0){ clearInterval(adTimer); adReady=true;
-                    document.getElementById('btnCancelAd').style.display='none'; document.getElementById('btnClaimAd').style.display='block';
-                    document.getElementById('adTimerText').textContent='✅ Siap Klaim!'; }},1000);
+        function openAd(reward, mode){
+            if(!debounce('ad'+mode, 1000)) return;
+            adReward = reward;
+            adSec = 15;
+            adReady = false;
+            document.getElementById('btnCancelAd').style.display = 'block';
+            document.getElementById('btnClaimAd').style.display = 'none';
+            updateAdUI();
+            document.getElementById('adModal').classList.add('active');
+            window.open(AD_LINK, '_blank', 'noopener,noreferrer');
+            if(adTimer) clearInterval(adTimer);
+            adTimer = setInterval(function(){
+                adSec--;
+                updateAdUI();
+                if(adSec <= 0){
+                    clearInterval(adTimer);
+                    adReady = true;
+                    document.getElementById('btnCancelAd').style.display = 'none';
+                    document.getElementById('btnClaimAd').style.display = 'block';
+                    document.getElementById('adTimerText').textContent = '✅ Siap Klaim!';
+                }
+            }, 1000);
         }
-        function updateAdUI(){ const p=((15-adSec)/15)*100; document.getElementById('adProgress').style.width=p+'%'; document.getElementById('adTimerText').textContent=`Validasi: ${adSec} detik`; }
-        function cancelAd(){ if(adTimer)clearInterval(adTimer); document.getElementById('adModal').classList.remove('active'); toast('⚠️ Validasi dibatalkan','err'); }
-        function claimAd(){ if(!adReady)return; coins+=adReward; updateBal(); document.getElementById('adModal').classList.remove('active'); toast(`🎉 +${adReward} Koin ditambahkan!`); if(gameActive&&adReward>500)closeGame(); }
-        function doubleReward(){ const e=Math.min(gameScore,gameMax); if(e<=0){toast('🎮 Main dulu!','err');return;} if(gameLoop)clearInterval(gameLoop); openAd(e*2,'double'); }
+
+        function updateAdUI(){
+            var p = ((15-adSec)/15)*100;
+            document.getElementById('adProgress').style.width = p + '%';
+            document.getElementById('adTimerText').textContent = 'Validasi: ' + adSec + ' detik';
+        }
+
+        function cancelAd(){
+            if(adTimer) clearInterval(adTimer);
+            document.getElementById('adModal').classList.remove('active');
+            toast('⚠️ Validasi dibatalkan', 'err');
+        }
+        function claimAd(){
+            if(!adReady) return;
+            coins += adReward;
+            updateBal();
+            document.getElementById('adModal').classList.remove('active');
+            toast('🎉 +' + adReward + ' Koin ditambahkan!');
+            if(gameActive && adReward > 500) closeGame();
+        }
+
+        function doubleReward(){
+            var e = Math.min(gameScore, gameMax);
+            if(e <= 0){ toast('🎮 Main dulu!', 'err'); return; }
+            if(gameLoop) clearInterval(gameLoop);
+            openAd(e * 2, 'double');
+        }
 
         // ===== QUIZ & CAPTCHA =====
-        function genMath(){ const ops=['+','-','*'],op=ops[Math.floor(Math.random()*ops.length)]; let a=Math.floor(Math.random()*12)+1,b=Math.floor(Math.random()*12)+1;
-            if(op==='*'){a=Math.floor(Math.random()*9)+1;b=Math.floor(Math.random()*9)+1;}
-            mathAns=op==='+'?a+b:op==='-'?a-b:a*b; document.getElementById('mathQ').textContent=`${a} ${op} ${b} = ?`;
-            let opts=[mathAns]; while(opts.length<4){const r=mathAns+Math.floor(Math.random()*10)-5;if(r!==mathAns&&!opts.includes(r))opts.push(r);}
-            opts.sort(()=>Math.random()-0.5); const c=document.getElementById('mathAns'); c.innerHTML='';
-            opts.forEach(o=>{const b=document.createElement('button');b.className='btn-answer';b.textContent=o;b.onclick=()=>checkMath(o,b);c.appendChild(b);});
+        function genMath(){
+            var ops = ['+', '-', '*'];
+            var op = ops[Math.floor(Math.random() * ops.length)];
+            var a = Math.floor(Math.random() * 12) + 1;
+            var b = Math.floor(Math.random() * 12) + 1;
+            if(op === '*'){
+                a = Math.floor(Math.random() * 9) + 1;
+                b = Math.floor(Math.random() * 9) + 1;
+            }
+            if(op === '+') mathAns = a + b;
+            else if(op === '-') mathAns = a - b;
+            else mathAns = a * b;
+            document.getElementById('mathQ').textContent = a + ' ' + op + ' ' + b + ' = ?';
+            var opts = [mathAns];
+            while(opts.length < 4){
+                var r = mathAns + Math.floor(Math.random() * 10) - 5;
+                if(r !== mathAns && opts.indexOf(r) === -1) opts.push(r);
+            }
+            opts.sort(function(){ return Math.random() - 0.5; });
+            var c = document.getElementById('mathAns');
+            c.innerHTML = '';
+            opts.forEach(function(o){
+                var btn = document.createElement('button');
+                btn.className = 'btn-answer';
+                btn.textContent = o;
+                btn.onclick = function(){ checkMath(o, btn); };
+                c.appendChild(btn);
+            });
         }
-        function checkMath(v,btn){ if(v===mathAns){btn.classList.add('correct');coins+=150;updateBal();toast('✅ Benar! +150 Koin');setTimeout(genMath,1000);}
-            else{btn.classList.add('wrong');toast('❌ Salah','err');if(Math.random()>0.7)openAd(100,'quiz');} }
-        function genCap(){ const ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; captchaCode=''; for(let i=0;i<6;i++)captchaCode+=ch.charAt(Math.floor(Math.random()*ch.length)); document.getElementById('capText').textContent=captchaCode; }
-        function verifyCap(){ const v=document.getElementById('capInput').value.toUpperCase().trim();
-            if(v===captchaCode){coins+=50;updateBal();toast('✅ Terverifikasi! +50 Koin');document.getElementById('capInput').value='';genCap();}            else{toast('❌ Kode salah','err');document.getElementById('capInput').value='';genCap();} }
+
+        function checkMath(v, btn){
+            if(v === mathAns){
+                btn.classList.add('correct');                coins += 150;
+                updateBal();
+                toast('✅ Benar! +150 Koin');
+                setTimeout(genMath, 1000);
+            } else {
+                btn.classList.add('wrong');
+                toast('❌ Salah', 'err');
+                if(Math.random() > 0.7) openAd(100, 'quiz');
+            }
+        }
+
+        function genCap(){
+            var ch = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            captchaCode = '';
+            for(var i = 0; i < 6; i++){
+                captchaCode += ch.charAt(Math.floor(Math.random() * ch.length));
+            }
+            document.getElementById('capText').textContent = captchaCode;
+        }
+
+        function verifyCap(){
+            var v = document.getElementById('capInput').value.toUpperCase().trim();
+            if(v === captchaCode){
+                coins += 50;
+                updateBal();
+                toast('✅ Terverifikasi! +50 Koin');
+                document.getElementById('capInput').value = '';
+                genCap();
+            } else {
+                toast('❌ Kode salah', 'err');
+                document.getElementById('capInput').value = '';
+                genCap();
+            }
+        }
 
         // ===== WHEEL =====
-        function buildWheel(){ const w=document.getElementById('wheel'); if(!w)return; w.innerHTML=''; const st=360/wheelParts.length;
-            wheelParts.forEach((p,i)=>{const s=document.createElement('div');s.className='wheel-segment';s.style.background=p.c;s.style.transform=`rotate(${i*st}deg) skewY(-${90-st}deg)`;
-                s.innerHTML=`<span style="transform:skewY(${90-st}deg) rotate(${st/2}deg)">${p.l}</span>`;w.appendChild(s);}); }
-        let spinning=false; function spinWheel(){ if(spinning||!debounce('spin',2000))return; spinning=true;
-            if(coins<10){toast('⚠️ Butuh 10 koin','err');spinning=false;return;} coins-=10;updateBal(); const w=document.getElementById('wheel');
-            const idx=Math.floor(Math.random()*wheelParts.length),st=360/wheelParts.length,rot=(360*5)+(360-(idx*st)-st/2);
-            w.style.transform=`rotate(${rot}deg)`; setTimeout(()=>{ const pz=wheelParts[idx];
-                if(pz.v>0){coins+=pz.v;toast(`🎰 +${pz.v} Koin!`);spinHistory.unshift({t:new Date().toLocaleTimeString(),r:pz.v});if(spinHistory.length>10)spinHistory.pop();localStorage.setItem('rk_spin',JSON.stringify(spinHistory));renderSpinHistory();}
-                else toast('😢 ZONK!','err'); updateBal(); w.style.transition='none';w.style.transform='rotate(0deg)';setTimeout(()=>{w.style.transition='transform 3.5s cubic-bezier(0.15,0.85,0.35,1)';},50); spinning=false; if(Math.random()>0.5)setTimeout(()=>openAd(200,'spin'),800);},3500); }
-        function renderSpinHistory(){ const b=document.getElementById('spinHistory'); if(!b||!spinHistory.length)return; b.innerHTML=spinHistory.slice(0,5).map(h=>`<div style="padding:3px 0;display:flex;justify-content:space-between"><span>${h.t}</span><strong style="color:var(--accent-yellow)">+${h.r}</strong></div>`).join(''); }
+        function buildWheel(){
+            var w = document.getElementById('wheel');
+            if(!w) return;
+            w.innerHTML = '';
+            var st = 360 / wheelParts.length;
+            wheelParts.forEach(function(p, i){
+                var s = document.createElement('div');
+                s.className = 'wheel-segment';
+                s.style.background = p.c;
+                s.style.transform = 'rotate(' + (i*st) + 'deg) skewY(-' + (90-st) + 'deg)';
+                s.innerHTML = '<span style="transform:skewY(' + (90-st) + 'deg) rotate(' + (st/2) + 'deg)">' + p.l + '</span>';
+                w.appendChild(s);
+            });
+        }
+        var spinning = false;
+        function spinWheel(){
+            if(spinning || !debounce('spin', 2000)) return;
+            spinning = true;
+            if(coins < 10){
+                toast('⚠️ Butuh 10 koin', 'err');
+                spinning = false;
+                return;
+            }
+            coins -= 10;
+            updateBal();
+            var w = document.getElementById('wheel');
+            var idx = Math.floor(Math.random() * wheelParts.length);
+            var st = 360 / wheelParts.length;
+            var rot = (360 * 5) + (360 - (idx * st) - st/2);
+            w.style.transform = 'rotate(' + rot + 'deg)';
+            setTimeout(function(){
+                var pz = wheelParts[idx];
+                if(pz.v > 0){
+                    coins += pz.v;
+                    toast('🎰 +' + pz.v + ' Koin!');
+                    spinHistory.unshift({t: new Date().toLocaleTimeString(), r: pz.v});
+                    if(spinHistory.length > 10) spinHistory.pop();
+                    localStorage.setItem('rk_spin', JSON.stringify(spinHistory));
+                    renderSpinHistory();
+                } else {
+                    toast('😢 ZONK!', 'err');
+                }
+                updateBal();
+                w.style.transition = 'none';
+                w.style.transform = 'rotate(0deg)';
+                setTimeout(function(){
+                    w.style.transition = 'transform 3.5s cubic-bezier(0.15,0.85,0.35,1)';
+                }, 50);
+                spinning = false;
+                if(Math.random() > 0.5) setTimeout(function(){ openAd(200, 'spin'); }, 800);
+            }, 3500);
+        }
 
+        function renderSpinHistory(){
+            var b = document.getElementById('spinHistory');
+            if(!b || !spinHistory.length) return;
+            var html = '';
+            spinHistory.slice(0, 5).forEach(function(h){
+                html += '<div style="padding:3px 0;display:flex;justify-content:space-between"><span>' + h.t + '</span><strong style="color:var(--accent-yellow)">+' + h.r + '</strong></div>';
+            });
+            b.innerHTML = html;
+        }
         // ===== WITHDRAW =====
-        function selWD(el){ document.querySelectorAll('.wd-card').forEach(c=>c.classList.remove('active')); el.classList.add('active'); wdMethod=el.dataset.m; }
-        function calcWD(){ const a=parseInt(document.getElementById('wdAmt').value); document.getElementById('wdNeed').textContent=(a*10).toLocaleString('id'); }
-        async function submitWD(){ if(!debounce('wd',1500))return;
-            const num=document.getElementById('wdNum').value.trim(),amt=parseInt(document.getElementById('wdAmt').value),need=amt*10;
-            if(!num||num.length<10){toast('⚠️ Nomor HP tidak valid','err');return;} if(coins<need){toast(`⚠️ Koin kurang! Butuh ${need.toLocaleString('id')}`,'err');return;}
-            try{ if(supabase){const{error}=await supabase.from('withdrawals').insert([{phone_number:num,payment_method:wdMethod,nominal:amt,coins_used:need,status:'pending',created_at:new Date().toISOString()}]);if(error)throw error;}
-                coins-=need;updateBal();toast('✅ Berhasil! Saldo diproses 1x24 jam');document.getElementById('wdNum').value='';}
-            catch(err){console.error(err);coins-=need;updateBal();toast('✅ Berhasil! Diproses manual');document.getElementById('wdNum').value='';} }
+        function selWD(el){
+            document.querySelectorAll('.wd-card').forEach(function(c){ c.classList.remove('active'); });
+            el.classList.add('active');
+            wdMethod = el.dataset.m;
+        }
+
+        function calcWD(){
+            var a = parseInt(document.getElementById('wdAmt').value);
+            document.getElementById('wdNeed').textContent = (a * 10).toLocaleString('id');
+        }
+
+        function submitWD(){
+            if(!debounce('wd', 1500)) return;
+            var num = document.getElementById('wdNum').value.trim();
+            var amt = parseInt(document.getElementById('wdAmt').value);
+            var need = amt * 10;
+            if(!num || num.length < 10){
+                toast('⚠️ Nomor HP tidak valid', 'err');
+                return;
+            }
+            if(coins < need){
+                toast('⚠️ Koin kurang! Butuh ' + need.toLocaleString('id'), 'err');
+                return;
+            }
+            if(supabase){
+                supabase.from('withdrawals').insert([{
+                    phone_number: num,
+                    payment_method: wdMethod,
+                    nominal: amt,
+                    coins_used: need,
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                }]).then(function(result){
+                    if(result.error) throw result.error;
+                    coins -= need;
+                    updateBal();
+                    toast('✅ Berhasil! Saldo diproses 1x24 jam');
+                    document.getElementById('wdNum').value = '';
+                }).catch(function(err){
+                    console.error(err);
+                    coins -= need;
+                    updateBal();
+                    toast('✅ Berhasil! Diproses manual');
+                    document.getElementById('wdNum').value = '';
+                });
+            } else {
+                coins -= need;
+                updateBal();
+                toast('✅ Berhasil! Diproses manual');                document.getElementById('wdNum').value = '';
+            }
+        }
 
         // ===== DAILY & ACHIEVEMENTS =====
-        function checkDaily(){ const t=new Date().toDateString(); if(lastDaily!==t){document.getElementById('dailyBonus').textContent='+200';}
-            else{document.getElementById('dailyBonus').textContent='✓';const bc=document.querySelector('.bonus-card:first-child');if(bc){bc.style.opacity='0.6';bc.style.pointerEvents='none';}} }
-        function claimDaily(){ const t=new Date().toDateString(); if(lastDaily===t){toast('⚠️ Sudah klaim hari ini','err');return;} coins+=200;updateBal();lastDaily=t;localStorage.setItem('rk_daily',t);document.getElementById('dailyBonus').textContent='✓';toast('🎁 +200 Koin!'); }
-        function claimAchievement(id){ if(achievements[id]){toast('⚠️ Sudah diklaim','err');return;} const rw={beginner:100,math:150}; coins+=rw[id]||100;updateBal();achievements[id]=true;localStorage.setItem('rk_ach',JSON.stringify(achievements));toast(`🏆 +${rw[id]||100} Koin`); }
+        function checkDaily(){
+            var t = new Date().toDateString();
+            if(lastDaily !== t){
+                document.getElementById('dailyBonus').textContent = '+200';
+            } else {
+                document.getElementById('dailyBonus').textContent = '✓';
+                var bc = document.querySelector('.bonus-card:first-child');
+                if(bc){
+                    bc.style.opacity = '0.6';
+                    bc.style.pointerEvents = 'none';
+                }
+            }
+        }
+
+        function claimDaily(){
+            var t = new Date().toDateString();
+            if(lastDaily === t){
+                toast('⚠️ Sudah klaim hari ini', 'err');
+                return;
+            }
+            coins += 200;
+            updateBal();
+            lastDaily = t;
+            localStorage.setItem('rk_daily', t);
+            document.getElementById('dailyBonus').textContent = '✓';
+            toast('🎁 +200 Koin!');
+        }
+
+        function claimAchievement(id){
+            if(achievements[id]){
+                toast('⚠️ Sudah diklaim', 'err');
+                return;
+            }
+            var rw = {beginner: 100, math: 150};
+            coins += (rw[id] || 100);
+            updateBal();
+            achievements[id] = true;
+            localStorage.setItem('rk_ach', JSON.stringify(achievements));
+            toast('🏆 +' + (rw[id] || 100) + ' Koin');
+        }
 
         // ===== GAME ENGINE =====
-        function startGame(g){ if(!debounce('game'+g.id,500))return;
-            gameActive=g.id;gameScore=0;gameMax=g.reward;document.getElementById('gTitle').textContent=`🎮 ${g.name}`;document.getElementById('gScore').textContent='0';document.getElementById('gPot').textContent='0';
-            const cv=document.getElementById('gCanvas'),bb=document.getElementById('balloonBox'),mb=document.getElementById('memoryBox'),dp=document.getElementById('dpad'),cb=document.getElementById('colorBtns');
-            cv.style.display='block';bb.style.display='none';mb.style.display='none';dp.style.display='none';cb.style.display='none';
-            document.getElementById('gameModal').classList.add('active'); if(gameLoop)clearInterval(gameLoop);
-            if(gameActive==='snake'){dp.style.display='grid';initSnake(cv);}
-            else if(gameActive==='balloon'){cv.style.display='none';bb.style.display='grid';initBalloon(bb);}
-            else if(gameActive==='memory'){cv.style.display='none';mb.style.display='grid';initMemory(mb);}
-            else if(gameActive==='color'){cb.style.display='grid';initColor(cv);}
-            else if(gameActive==='math')initFastMath(cv);
-            document.body.style.overscrollBehavior='contain';
+        function startGame(g){
+            if(!debounce('game'+g.id, 500)) return;
+            gameActive = g.id;            gameScore = 0;
+            gameMax = g.reward;
+            document.getElementById('gTitle').textContent = '🎮 ' + g.name;
+            document.getElementById('gScore').textContent = '0';
+            document.getElementById('gPot').textContent = '0';
+            var cv = document.getElementById('gCanvas');
+            var bb = document.getElementById('balloonBox');
+            var mb = document.getElementById('memoryBox');
+            var dp = document.getElementById('dpad');
+            var cb = document.getElementById('colorBtns');
+            cv.style.display = 'block';
+            bb.style.display = 'none';
+            mb.style.display = 'none';
+            dp.style.display = 'none';
+            cb.style.display = 'none';
+            document.getElementById('gameModal').classList.add('active');
+            if(gameLoop) clearInterval(gameLoop);
+            if(gameActive === 'snake'){
+                dp.style.display = 'grid';
+                initSnake(cv);
+            } else if(gameActive === 'balloon'){
+                cv.style.display = 'none';
+                bb.style.display = 'grid';
+                initBalloon(bb);
+            } else if(gameActive === 'memory'){
+                cv.style.display = 'none';
+                mb.style.display = 'grid';
+                initMemory(mb);
+            } else if(gameActive === 'color'){
+                cb.style.display = 'grid';
+                initColor(cv);
+            } else if(gameActive === 'math'){
+                initFastMath(cv);
+            }
+            document.body.style.overscrollBehavior = 'contain';
         }
-        function closeGame(){ if(gameLoop){clearInterval(gameLoop);gameLoop=null;}
-            const w=document.getElementById('wheel'); if(w){w.style.transition='none';w.style.transform='rotate(0deg)';}
-            const cv=document.getElementById('gCanvas'); if(cv)cv.onclick=null;
-            const earn=Math.min(gameScore,gameMax); if(earn>0){coins+=earn;updateBal();toast(`🎮 +${earn} Koin!`);}
-            document.getElementById('gameModal').classList.remove('active'); gameActive=null;gameScore=0; document.body.style.overscrollBehavior=''; }
-        function cmd(d){ if(gameActive!=='snake')return; if(d==='UP'&&snakeDir!=='DOWN')snakeDir='UP'; if(d==='DOWN'&&snakeDir!=='UP')snakeDir='DOWN'; if(d==='LEFT'&&snakeDir!=='RIGHT')snakeDir='LEFT'; if(d==='RIGHT'&&snakeDir!=='LEFT')snakeDir='RIGHT'; }
+
+        function closeGame(){
+            if(gameLoop){
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+            var w = document.getElementById('wheel');
+            if(w){
+                w.style.transition = 'none';
+                w.style.transform = 'rotate(0deg)';
+            }
+            var cv = document.getElementById('gCanvas');
+            if(cv) cv.onclick = null;
+            var earn = Math.min(gameScore, gameMax);            if(earn > 0){
+                coins += earn;
+                updateBal();
+                toast('🎮 +' + earn + ' Koin!');
+            }
+            document.getElementById('gameModal').classList.remove('active');
+            gameActive = null;
+            gameScore = 0;
+            document.body.style.overscrollBehavior = '';
+        }
+
+        function cmd(d){
+            if(gameActive !== 'snake') return;
+            if(d === 'UP' && snakeDir !== 'DOWN') snakeDir = 'UP';
+            if(d === 'DOWN' && snakeDir !== 'UP') snakeDir = 'DOWN';
+            if(d === 'LEFT' && snakeDir !== 'RIGHT') snakeDir = 'LEFT';
+            if(d === 'RIGHT' && snakeDir !== 'LEFT') snakeDir = 'RIGHT';
+        }
+
         // Snake
-        let snake=[{x:100,y:100}],snakeDir='RIGHT',snakeTarget=10,snakeAns={x:60,y:80},snakeWrong={x:200,y:180},fakeAns=99;
-        function initSnake(cv){ const ctx=cv.getContext('2d'); snake=[{x:100,y:100}];snakeDir='RIGHT';
-            let a=Math.floor(Math.random()*5)+1,b=Math.floor(Math.random()*5)+1; snakeTarget=a+b;fakeAns=snakeTarget+Math.floor(Math.random()*5)+1;if(fakeAns===snakeTarget)fakeAns++;
-            snakeAns={x:Math.floor(Math.random()*12)*20+20,y:Math.floor(Math.random()*12)*20+20};snakeWrong={x:Math.floor(Math.random()*12)*20+20,y:Math.floor(Math.random()*12)*20+20};
-            gameLoop=setInterval(()=>{ let h={x:snake[0].x,y:snake[0].y};
-                if(snakeDir==='RIGHT')h.x+=18;if(snakeDir==='LEFT')h.x-=18;if(snakeDir==='UP')h.y-=18;if(snakeDir==='DOWN')h.y+=18;
-                if(h.x<0)h.x=262;if(h.x>262)h.x=0;if(h.y<0)h.y=262;if(h.y>262)h.y=0; snake.unshift(h);
-                if(Math.abs(h.x-snakeAns.x)<18&&Math.abs(h.y-snakeAns.y)<18){ gameScore+=25;updGameScore(); a=Math.floor(Math.random()*5)+1;b=Math.floor(Math.random()*5)+1;snakeTarget=a+b;fakeAns=snakeTarget+Math.floor(Math.random()*5)+1; snakeAns={x:Math.floor(Math.random()*12)*20+20,y:Math.floor(Math.random()*12)*20+20};snakeWrong={x:Math.floor(Math.random()*12)*20+20,y:Math.floor(Math.random()*12)*20+20};}
-                else if(Math.abs(h.x-snakeWrong.x)<18&&Math.abs(h.y-snakeWrong.y)<18){ gameScore=Math.max(0,gameScore-8);updGameScore(); snakeWrong={x:Math.floor(Math.random()*12)*20+20,y:Math.floor(Math.random()*12)*20+20};}
-                else snake.pop();
-                ctx.fillStyle='#0b0f19';ctx.fillRect(0,0,280,280); ctx.fillStyle='#10b981';snake.forEach(s=>ctx.fillRect(s.x,s.y,16,16));
-                ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.fillText(`Hitung: ${a}+${b}=?`,8,18);
-                ctx.fillStyle='#fbbf24';ctx.font='bold 14px sans-serif';ctx.fillText(snakeTarget.toString(),snakeAns.x,snakeAns.y);
-                ctx.fillStyle='#ef4444';ctx.fillText(fakeAns.toString(),snakeWrong.x,snakeWrong.y); },160); }
-        function updGameScore(){ document.getElementById('gScore').textContent=gameScore; document.getElementById('gPot').textContent=Math.min(gameScore,gameMax); }
+        var snake = [{x:100,y:100}];
+        var snakeDir = 'RIGHT';
+        var snakeTarget = 10;
+        var snakeAns = {x:60,y:80};
+        var snakeWrong = {x:200,y:180};
+        var fakeAns = 99;
+
+        function initSnake(cv){
+            var ctx = cv.getContext('2d');
+            snake = [{x:100,y:100}];
+            snakeDir = 'RIGHT';
+            var a = Math.floor(Math.random() * 5) + 1;
+            var b = Math.floor(Math.random() * 5) + 1;
+            snakeTarget = a + b;
+            fakeAns = snakeTarget + Math.floor(Math.random() * 5) + 1;
+            if(fakeAns === snakeTarget) fakeAns++;
+            snakeAns = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+            snakeWrong = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+            gameLoop = setInterval(function(){
+                var h = {x: snake[0].x, y: snake[0].y};
+                if(snakeDir === 'RIGHT') h.x += 18;
+                if(snakeDir === 'LEFT') h.x -= 18;
+                if(snakeDir === 'UP') h.y -= 18;
+                if(snakeDir === 'DOWN') h.y += 18;
+                if(h.x < 0) h.x = 262;
+                if(h.x > 262) h.x = 0;
+                if(h.y < 0) h.y = 262;
+                if(h.y > 262) h.y = 0;
+                snake.unshift(h);
+                if(Math.abs(h.x - snakeAns.x) < 18 && Math.abs(h.y - snakeAns.y) < 18){                    gameScore += 25;
+                    updGameScore();
+                    a = Math.floor(Math.random() * 5) + 1;
+                    b = Math.floor(Math.random() * 5) + 1;
+                    snakeTarget = a + b;
+                    fakeAns = snakeTarget + Math.floor(Math.random() * 5) + 1;
+                    snakeAns = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                    snakeWrong = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                } else if(Math.abs(h.x - snakeWrong.x) < 18 && Math.abs(h.y - snakeWrong.y) < 18){
+                    gameScore = Math.max(0, gameScore - 8);
+                    updGameScore();
+                    snakeWrong = {x: Math.floor(Math.random() * 12) * 20 + 20, y: Math.floor(Math.random() * 12) * 20 + 20};
+                } else {
+                    snake.pop();
+                }
+                ctx.fillStyle = '#0b0f19';
+                ctx.fillRect(0, 0, 280, 280);
+                ctx.fillStyle = '#10b981';
+                snake.forEach(function(s){ ctx.fillRect(s.x, s.y, 16, 16); });
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.fillText('Hitung: ' + a + '+' + b + '=?', 8, 18);
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(snakeTarget.toString(), snakeAns.x, snakeAns.y);
+                ctx.fillStyle = '#ef4444';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(fakeAns.toString(), snakeWrong.x, snakeWrong.y);
+            }, 160);
+        }
+
+        function updGameScore(){
+            document.getElementById('gScore').textContent = gameScore;
+            document.getElementById('gPot').textContent = Math.min(gameScore, gameMax);
+        }
 
         // Balloon
-        function initBalloon(bx){ const lt=['A','B','C','D','E','F'],tg=lt[Math.floor(Math.random()*lt.length)]; bx.innerHTML=''; document.getElementById('gTitle').textContent=`🎈 Cari: [ ${tg} ]`;
-            const cl=['#ec4899','#3b82f6','#10b981','#fbbf24','#f97316']; lt.forEach(l=>{ const b=document.createElement('div');b.className='balloon';const c=cl[Math.floor(Math.random()*cl.length)];
-                b.style.color=c;b.style.backgroundColor=c+'22';b.style.border=`2px solid ${c}`;b.innerHTML=`${l}<div class="balloon-tail" style="color:${c}"></div>`;
-                b.onclick=()=>{ if(l===tg){gameScore+=18;updGameScore();toast('🎈 Pop!');initBalloon(bx);}else toast('❌ Cari yang benar','err'); }; bx.appendChild(b); }); }
+        function initBalloon(bx){
+            var lt = ['A','B','C','D','E','F'];
+            var tg = lt[Math.floor(Math.random() * lt.length)];
+            bx.innerHTML = '';
+            document.getElementById('gTitle').textContent = '🎈 Cari: [ ' + tg + ' ]';
+            var cl = ['#ec4899','#3b82f6','#10b981','#fbbf24','#f97316'];
+            lt.forEach(function(l){
+                var b = document.createElement('div');
+                b.className = 'balloon';
+                var c = cl[Math.floor(Math.random() * cl.length)];
+                b.style.color = c;
+                b.style.backgroundColor = c + '22';
+                b.style.border = '2px solid ' + c;                b.innerHTML = l + '<div class="balloon-tail" style="color:' + c + '"></div>';
+                b.onclick = function(){
+                    if(l === tg){
+                        gameScore += 18;
+                        updGameScore();
+                        toast('🎈 Pop!');
+                        initBalloon(bx);
+                    } else {
+                        toast('❌ Cari yang benar', 'err');
+                    }
+                };
+                bx.appendChild(b);
+            });
+        }
 
         // Memory
-        function initMemory(bx){ const ic=['🐶','🐱','🦁','🐸'],cd=[...ic,...ic].sort(()=>Math.random()-0.5); bx.innerHTML=''; let fr=null,lk=false;
-            cd.forEach(i=>{ const c=document.createElement('div');c.className='memory-tile';c.textContent='❓'; c.onclick=()=>{
-                if(lk||c.classList.contains('flipped')||c===fr)return; c.classList.add('flipped');c.textContent=i; if(!fr){fr=c;return;} lk=true;
-                if(fr.textContent===c.textContent){gameScore+=22;updGameScore();fr=null;lk=false;}
-                else setTimeout(()=>{fr.classList.remove('flipped');fr.textContent='❓';c.classList.remove('flipped');c.textContent='❓';fr=null;lk=false;},800); }; bx.appendChild(c); }); }
+        function initMemory(bx){
+            var ic = ['🐶','🐱','🦁','🐸'];
+            var cd = ic.concat(ic).sort(function(){ return Math.random() - 0.5; });
+            bx.innerHTML = '';
+            var fr = null;
+            var lk = false;
+            cd.forEach(function(i){
+                var c = document.createElement('div');
+                c.className = 'memory-tile';
+                c.textContent = '❓';
+                c.onclick = function(){
+                    if(lk || c.classList.contains('flipped') || c === fr) return;
+                    c.classList.add('flipped');
+                    c.textContent = i;
+                    if(!fr){
+                        fr = c;
+                        return;
+                    }
+                    lk = true;
+                    if(fr.textContent === c.textContent){
+                        gameScore += 22;
+                        updGameScore();
+                        fr = null;
+                        lk = false;
+                    } else {
+                        setTimeout(function(){
+                            fr.classList.remove('flipped');
+                            fr.textContent = '❓';
+                            c.classList.remove('flipped');
+                            c.textContent = '❓';
+                            fr = null;
+                            lk = false;
+                        }, 800);
+                    }                };
+                bx.appendChild(c);
+            });
+        }
 
         // Color
-        function initColor(cv){ const ctx=cv.getContext('2d'),tx=colors[Math.floor(Math.random()*colors.length)],mt=Math.random()>0.5,vs=mt?tx:colors[Math.floor(Math.random()*colors.length)];
-            window.colorTargetText=tx.n;window.colorTargetHex=vs.h; ctx.fillStyle='#0b0f19';ctx.fillRect(0,0,280,280);
-            ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.fillText('Apakah teks sesuai warna?',18,45);
-            ctx.fillStyle=window.colorTargetHex;ctx.font='bold 32px sans-serif';ctx.fillText(window.colorTargetText,50,150); }
-        function colorAns(im){ const tx=colors.find(c=>c.n===window.colorTargetText),ac=tx.h===window.colorTargetHex;
-            if(im===ac){gameScore+=18;updGameScore();toast('🎨 Benar!');}else toast('❌ Perhatikan','err'); initColor(document.getElementById('gCanvas')); }
+        function initColor(cv){
+            var ctx = cv.getContext('2d');
+            var tx = colors[Math.floor(Math.random() * colors.length)];
+            var mt = Math.random() > 0.5;
+            var vs = mt ? tx : colors[Math.floor(Math.random() * colors.length)];
+            window.colorTargetText = tx.n;
+            window.colorTargetHex = vs.h;
+            ctx.fillStyle = '#0b0f19';
+            ctx.fillRect(0, 0, 280, 280);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillText('Apakah teks sesuai warna?', 18, 45);
+            ctx.fillStyle = window.colorTargetHex;
+            ctx.font = 'bold 32px sans-serif';
+            ctx.fillText(window.colorTargetText, 50, 150);
+        }
+
+        function colorAns(im){
+            var tx = colors.find(function(c){ return c.n === window.colorTargetText; });
+            var ac = tx.h === window.colorTargetHex;
+            if(im === ac){
+                gameScore += 18;
+                updGameScore();
+                toast('🎨 Benar!');
+            } else {
+                toast('❌ Perhatikan', 'err');
+            }
+            initColor(document.getElementById('gCanvas'));
+        }
 
         // Fast Math
-        function initFastMath(cv){ const ctx=cv.getContext('2d'),a=Math.floor(Math.random()*9)+2,b=Math.floor(Math.random()*9)+2,cr=a*b;
-            ctx.fillStyle='#0b0f19';ctx.fillRect(0,0,280,280); ctx.fillStyle='#fbbf24';ctx.font='bold 32px sans-serif';ctx.fillText(`${a} × ${b} = ?`,70,130);
-            let op=[cr]; while(op.length<3){const r=cr+Math.floor(Math.random()*8)-4;if(r!==cr&&!op.includes(r))op.push(r);} op.sort(()=>Math.random()-0.5);
-            let ar=[]; op.forEach((o,i)=>{ const x=12+i*84,y=200,w=72,h=40; ctx.fillStyle='rgba(255,255,255,0.05)';ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);
-                ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.fillText(o.toString(),x+22,y+26); ar.push({x,y,w,h,v:o}); });
-            cv.onclick=e=>{ const rc=cv.getBoundingClientRect(),cx=((e.clientX-rc.left)/rc.width)*280,cy=((e.clientY-rc.top)/rc.height)*280;
-                ar.forEach(a=>{ if(cx>=a.x&&cx<=a.x+a.w&&cy>=a.y&&cy<=a.y+a.h){ if(a.v===cr){gameScore+=22;updGameScore();toast('🧠 Pintar!');}else toast('❌ Salah','err'); initFastMath(cv); } }); }; }
+        function initFastMath(cv){
+            var ctx = cv.getContext('2d');
+            var a = Math.floor(Math.random() * 9) + 2;
+            var b = Math.floor(Math.random() * 9) + 2;
+            var cr = a * b;
+            ctx.fillStyle = '#0b0f19';
+            ctx.fillRect(0, 0, 280, 280);
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 32px sans-serif';
+            ctx.fillText(a + ' × ' + b + ' = ?', 70, 130);
+            var op = [cr];
+            while(op.length < 3){
+                var r = cr + Math.floor(Math.random() * 8) - 4;                if(r !== cr && op.indexOf(r) === -1) op.push(r);
+            }
+            op.sort(function(){ return Math.random() - 0.5; });
+            var ar = [];
+            op.forEach(function(o, i){
+                var x = 12 + i * 84;
+                var y = 200;
+                var w = 72;
+                var h = 40;
+                ctx.fillStyle = 'rgba(255,255,255,0.05)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.fillRect(x, y, w, h);
+                ctx.strokeRect(x, y, w, h);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(o.toString(), x + 22, y + 26);
+                ar.push({x: x, y: y, w: w, h: h, v: o});
+            });
+            cv.onclick = function(e){
+                var rc = cv.getBoundingClientRect();
+                var cx = ((e.clientX - rc.left) / rc.width) * 280;
+                var cy = ((e.clientY - rc.top) / rc.height) * 280;
+                ar.forEach(function(area){
+                    if(cx >= area.x && cx <= area.x + area.w && cy >= area.y && cy <= area.y + area.h){
+                        if(area.v === cr){
+                            gameScore += 22;
+                            updGameScore();
+                            toast('🧠 Pintar!');
+                        } else {
+                            toast('❌ Salah', 'err');
+                        }
+                        initFastMath(cv);
+                    }
+                });
+            };
+        }
 
         // ===== PTR & SCROLL =====
-        function initPTR(){ let sy=0,pl=false,ptr=document.getElementById('ptrIndicator'),th=80,cp=false;
-            document.addEventListener('touchstart',e=>{ if(window.scrollY<=0&&e.touches.length===1){sy=e.touches[0].clientY;pl=true;cp=true;} },{passive:true});            document.addEventListener('touchmove',e=>{ if(!pl||!cp)return; const dy=e.touches[0].clientY-sy;
-                if(dy>10&&dy<th*2){ if(dy>30)e.preventDefault(); const pr=Math.min(dy/th,1); ptr.style.opacity=pr;ptr.style.transform=`translateX(-50%) translateY(${-th+dy*0.3}px)`;
-                    if(dy>th){ptr.classList.add('refreshing');document.getElementById('ptrText').textContent='🔄 Lepas untuk refresh...';}
-                    else{ptr.classList.remove('refreshing');document.getElementById('ptrText').textContent='⬇️ Tarik untuk refresh';} } },{passive:false});
-            document.addEventListener('touchend',()=>{ if(pl){pl=false;cp=false;ptr.style.opacity='0';ptr.style.transform='translateX(-50%) translateY(-100%)'; if(ptr.classList.contains('refreshing'))doRefresh(); } },{passive:true}); }
-        function doRefresh(){ document.getElementById('ptrText').textContent='Memuat...'; setTimeout(()=>location.reload(),800); }
-        function initScrollRefresh(){ let ls=0; window.addEventListener('scroll',()=>{ const sy=window.scrollY,ms=document.documentElement.scrollHeight-window.innerHeight;
-            if(sy>=ms-10&&sy>ls){ setTimeout(()=>{ if(window.scrollY>=ms-10){toast('🔄 Diperbarui!');setTimeout(()=>location.reload(),500);} },300); } ls=sy; },{passive:true}); }
+        function initPTR(){
+            var sy = 0;
+            var pl = false;
+            var ptr = document.getElementById('ptrIndicator');
+            var th = 80;
+            var cp = false;
+            document.addEventListener('touchstart', function(e){
+                if(window.scrollY <= 0 && e.touches.length === 1){
+                    sy = e.touches[0].clientY;
+                    pl = true;
+                    cp = true;
+                }            }, {passive: true});
+            document.addEventListener('touchmove', function(e){
+                if(!pl || !cp) return;
+                var dy = e.touches[0].clientY - sy;
+                if(dy > 10 && dy < th * 2){
+                    if(dy > 30) e.preventDefault();
+                    var pr = Math.min(dy / th, 1);
+                    ptr.style.opacity = pr;
+                    ptr.style.transform = 'translateX(-50%) translateY(' + (-th + dy * 0.3) + 'px)';
+                    if(dy > th){
+                        ptr.classList.add('refreshing');
+                        document.getElementById('ptrText').textContent = '🔄 Lepas untuk refresh...';
+                    } else {
+                        ptr.classList.remove('refreshing');
+                        document.getElementById('ptrText').textContent = '⬇️ Tarik untuk refresh';
+                    }
+                }
+            }, {passive: false});
+            document.addEventListener('touchend', function(){
+                if(pl){
+                    pl = false;
+                    cp = false;
+                    ptr.style.opacity = '0';
+                    ptr.style.transform = 'translateX(-50%) translateY(-100%)';
+                    if(ptr.classList.contains('refreshing')) doRefresh();
+                }
+            }, {passive: true});
+        }
 
+        function doRefresh(){
+            document.getElementById('ptrText').textContent = 'Memuat...';
+            setTimeout(function(){ location.reload(); }, 800);
+        }
+
+        function initScrollRefresh(){
+            var ls = 0;
+            window.addEventListener('scroll', function(){
+                var sy = window.scrollY;
+                var ms = document.documentElement.scrollHeight - window.innerHeight;
+                if(sy >= ms - 10 && sy > ls){
+                    setTimeout(function(){
+                        if(window.scrollY >= ms - 10){
+                            toast('🔄 Diperbarui!');
+                            setTimeout(function(){ location.reload(); }, 500);
+                        }
+                    }, 300);
+                }
+                ls = sy;
+            }, {passive: true});
+        }
         // ===== UTILS =====
-        function toast(m,t=''){ const e=document.createElement('div');e.className='toast-popup'+(t==='err'?' err':'');e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2200); }
-        function showPolicy(tp){ const md=document.getElementById('policyModal'),tl=document.getElementById('pTitle'),tx=document.getElementById('pText'); if(!md||!tl||!tx)return;
-            if(tp==='privacy'){tl.textContent='Kebijakan Privasi';tx.innerHTML='Kami tidak melacak lokasi, tidak mengumpulkan riwayat pencarian. Data hanya digunakan untuk pencairan saldo e-wallet yang sah. Semua transmisi dienkripsi.';}
-            else if(tp==='security'){tl.textContent='Keamanan Data';tx.innerHTML='Arsitektur leksikal tertutup melindungi konfigurasi database. Validasi tanda tangan digital di setiap transaksi mencegah manipulasi.';}
-            else{tl.textContent='Syarat & Ketentuan';tx.innerHTML='Pengguna wajib berusia 13+. Dilarang menggunakan bot/automasi. Pelanggaran mengakibatkan pemblokiran akun. RewardKu berhak mengubah ketentuan sewaktu-waktu.';}
-            md.classList.add('active'); }
-        function closePolicy(){ document.getElementById('policyModal').classList.remove('active'); }
-        function setupModalClose(id){ const md=document.getElementById(id); if(!md)return; md.addEventListener('click',e=>{ if(e.target===md){md.classList.remove('active'); if(id==='adModal'&&adTimer){clearInterval(adTimer);adTimer=null;} if(id==='gameModal')closeGame(); } }); }
+        function toast(m, t){
+            var e = document.createElement('div');
+            e.className = 'toast-popup' + (t === 'err' ? ' err' : '');
+            e.textContent = m;
+            document.body.appendChild(e);
+            setTimeout(function(){ e.remove(); }, 2200);
+        }
+
+        function showPolicy(tp){
+            var md = document.getElementById('policyModal');
+            var tl = document.getElementById('pTitle');
+            var tx = document.getElementById('pText');
+            if(!md || !tl || !tx) return;
+            if(tp === 'privacy'){
+                tl.textContent = 'Kebijakan Privasi';
+                tx.innerHTML = 'Kami tidak melacak lokasi, tidak mengumpulkan riwayat pencarian. Data hanya digunakan untuk pencairan saldo e-wallet yang sah. Semua transmisi dienkripsi.';
+            } else if(tp === 'security'){
+                tl.textContent = 'Keamanan Data';
+                tx.innerHTML = 'Arsitektur leksikal tertutup melindungi konfigurasi database. Validasi tanda tangan digital di setiap transaksi mencegah manipulasi.';
+            } else {
+                tl.textContent = 'Syarat & Ketentuan';
+                tx.innerHTML = 'Pengguna wajib berusia 13+. Dilarang menggunakan bot/automasi. Pelanggaran mengakibatkan pemblokiran akun. RewardKu berhak mengubah ketentuan sewaktu-waktu.';
+            }
+            md.classList.add('active');
+        }
+
+        function closePolicy(){
+            document.getElementById('policyModal').classList.remove('active');
+        }
+
+        function setupModalClose(id){
+            var md = document.getElementById(id);
+            if(!md) return;
+            md.addEventListener('click', function(e){
+                if(e.target === md){
+                    md.classList.remove('active');
+                    if(id === 'adModal' && adTimer){
+                        clearInterval(adTimer);
+                        adTimer = null;
+                    }
+                    if(id === 'gameModal') closeGame();
+                }
+            });
+        }
 
         // Prevent double-tap zoom
-        let lte=0; document.addEventListener('touchend',e=>{ const n=Date.now(); if(n-lte<=300)e.preventDefault(); lte=n; },false);
+        var lte = 0;
+        document.addEventListener('touchend', function(e){            var n = Date.now();
+            if(n - lte <= 300) e.preventDefault();
+            lte = n;
+        }, false);
     </script>
 </body>
 </html>
