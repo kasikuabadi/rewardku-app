@@ -3,32 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RewardKu Mega Arcade V3 - Safe & Fair Edition</title>
+    <title>RewardKu Arcade Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        @keyframes rotate-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .spin-wheel { animation: rotate-slow 12s linear infinite; }
-        .spin-active { animation: rotate-slow 1s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        body { font-family: 'Poppins', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        /* Animasi Koin Bergetar Premium */
+        @keyframes coinPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08) rotate(3deg); filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.6)); }
+            100% { transform: scale(1); }
+        }
+        .coin-active:active { animation: coinPop 0.15s ease-out; }
+
+        /* Efek Partikel Koin Terbang */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120px) scale(0.6); opacity: 0; }
+        }
+        .floating-particle {
+            position: absolute; pointer-events: none; animation: floatUp 0.8s ease-out forwards;
+            font-weight: bold; color: #fbbf24; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Desain Roda Berputar Realistis */
+        .wheel-plate { transition: transform 3s cubic-bezier(0.1, 0.8, 0.3, 1); }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased select-none">
+<body class="bg-[#0b0f19] text-slate-100 antialiased select-none">
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4 pb-24 relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4 pb-20 relative bg-gradient-to-b from-[#0b0f19] via-[#111827] to-[#070a12]">
         
-        <header class="bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl shadow-xl flex justify-between items-center border border-slate-800 mb-3">
+        <header class="bg-[#1e293b]/90 backdrop-blur-md p-3.5 rounded-2xl shadow-xl flex justify-between items-center border border-slate-800/80 mb-3">
             <div>
                 <div class="flex items-center gap-1.5">
-                    <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-emerald-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">REWARDKU</h1>
+                    <h1 class="text-lg font-black tracking-wider bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 bg-clip-text text-transparent">REWARDKU</h1>
                     <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 </div>
-                <p id="user-phone" class="text-xs text-slate-400 font-mono mt-0.5">ID: Memuat...</p>
+                <p id="user-phone" class="text-[11px] text-slate-400 font-mono mt-0.5">ID: Memuat...</p>
             </div>
             
-            <div class="bg-slate-950 px-4 py-2 rounded-xl border border-amber-500/30 flex items-center gap-2 shadow-inner">
-                <span class="text-xl">🪙</span>
-                <span id="user-coins" class="font-black text-amber-400 text-lg tracking-wide">0</span>
+            <div class="bg-[#0f172a] px-3.5 py-1.5 rounded-xl border border-amber-500/30 flex items-center gap-1.5 shadow-inner">
+                <span class="text-lg animate-bounce">🪙</span>
+                <span id="user-coins" class="font-black text-amber-400 text-base tracking-wide">0</span>
             </div>
         </header>
 
@@ -39,85 +59,95 @@
             <script src="https://revolthem.com/e09b85ce63c196e932ec644f78690a61/invoke.js"></script>
         </div>
 
-        <div id="tab-home" class="tab-content active flex-grow flex flex-col justify-center items-center my-auto">
-            <p class="text-xs text-slate-400 mb-6 text-center">Ketuk koin emas raksasa untuk klaim saldo instan!</p>
-            <button id="click-btn" class="w-44 h-44 bg-gradient-to-b from-amber-400 via-yellow-500 to-orange-600 rounded-full shadow-[0_0_40px_rgba(245,158,11,0.25)] flex items-center justify-center border-[8px] border-amber-300/80 active:scale-95 transition-transform duration-75 focus:outline-none cursor-pointer">
-                <span class="text-7xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">🪙</span>
-            </button>
-            <p class="text-[10px] text-slate-500 font-mono mt-6">Multi-Click: +1 Koin / Tap (Tersimpan Otomatis)</p>
-        </div>
 
-        <div id="tab-arcade" class="tab-content flex-grow space-y-4 overflow-y-auto max-h-[62vh] pb-4 px-1">
-            <h2 class="text-sm font-black text-amber-400 tracking-wider mb-2">🎯 GAMES ZONE (BERSIH & AMAN)</h2>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4 shadow-md">
-                <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-full flex items-center justify-center text-2xl spin-wheel">🎯</div>
-                <div class="flex-grow">
-                    <h3 class="text-xs font-bold text-white">Roda Keberuntungan</h3>
-                    <p class="text-[10px] text-slate-400">Putar roda acak dapat s.d +60 Koin</p>
-                    <button onclick="playSpin()" class="mt-2 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-md transition-all">PUTAR GAME</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4 shadow-md">
-                <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-2xl">🎁</div>
-                <div class="flex-grow">
-                    <h3 class="text-xs font-bold text-white">Kartu Gosok Misteri</h3>
-                    <p class="text-[10px] text-slate-400">Gosok layar hadiah kejutan +50 Koin</p>
-                    <button onclick="playScratch()" class="mt-2 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-md transition-all">GOSOK KARTU</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4 shadow-md">
-                <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-2xl">🧮</div>
-                <div class="flex-grow">
-                    <h3 class="text-xs font-bold text-white">Matematika Asah Otak</h3>
-                    <p class="text-[10px] text-slate-400">Jawab soal pertambahan matematika cepat</p>
-                    <button onclick="playMath()" class="mt-2 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-md transition-all">HITUNG CEPAT</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4 shadow-md">
-                <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-2xl">🔢</div>
-                <div class="flex-grow">
-                    <h3 class="text-xs font-bold text-white">Tebak Angka Logika</h3>
-                    <p class="text-[10px] text-slate-400">Tebak nomor rahasia sistem (+40 Koin)</p>
-                    <button onclick="playGuessNumber()" class="mt-2 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-md transition-all">TEBAK ANGKA</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4 shadow-md">
-                <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-2xl">✂️</div>
-                <div class="flex-grow">
-                    <h3 class="text-xs font-bold text-white">Suwit King Cerdas</h3>
-                    <p class="text-[10px] text-slate-400">Uji ketangkasan suwit melawan bot AI cerdas</p>
-                    <button onclick="playRPS()" class="mt-2 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-md transition-all">MULAI SUWIT</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-tasks" class="tab-content flex-grow space-y-3 overflow-y-auto max-h-[62vh] py-2">
-            <h2 class="text-sm font-black text-amber-400 tracking-wider mb-2">📋 MISI HARIAN CUAN</h2>
+        <div id="tab-home" class="tab-content active flex-grow flex flex-col justify-center items-center relative min-h-[50vh]">
+            <p class="text-xs text-slate-400 mb-6 text-center tracking-wide bg-slate-900/50 px-4 py-1.5 rounded-full border border-slate-800">✨ Ketuk Koin Emas untuk Mengumpulkan Saldo Rupiah</p>
             
-            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
+            <div id="coin-container" class="relative flex items-center justify-center w-full h-52">
+                <button id="click-btn" class="coin-active w-40 h-40 bg-gradient-to-b from-amber-300 via-amber-500 to-orange-600 rounded-full shadow-[0_0_50px_rgba(245,158,11,0.3)] flex items-center justify-center border-[8px] border-amber-200/90 focus:outline-none cursor-pointer transition-transform duration-75">
+                    <div class="w-32 h-32 rounded-full border-4 border-dashed border-amber-300/40 flex items-center justify-center bg-amber-500/10">
+                        <span class="text-6xl filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)]">🪙</span>
+                    </div>
+                </button>
+            </div>
+            
+            <p class="text-[10px] text-slate-500 font-mono mt-4 uppercase tracking-widest">Multi-Click Active • Auto Saved</p>
+        </div>
+
+
+        <div id="tab-arcade" class="tab-content flex-grow space-y-4 overflow-y-auto max-h-[55vh] pb-4 px-1">
+            
+            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg">
+                <h3 class="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-3">🎯 RODA KEBERUNTUNGAN</h3>
+                <div class="flex items-center gap-4">
+                    <div class="relative w-24 h-24 shrink-0">
+                        <div id="wheel-plate" class="wheel-plate w-full h-full rounded-full border-4 border-slate-700 bg-gradient-to-r from-red-500 via-blue-500 via-green-500 to-yellow-500 flex items-center justify-center text-[10px] font-black text-white shadow-md">
+                            <div class="bg-slate-900/90 w-16 h-16 rounded-full flex items-center justify-center text-[9px] text-amber-300">REWARD</div>
+                        </div>
+                        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-white z-10"></div>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-[11px] text-slate-400">Putar papan roda warna untuk mendapatkan bonus instan acak hingga +100 Koin.</p>
+                        <button onclick="spinWheelAction()" class="mt-2.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-[11px] rounded-xl shadow-md active:scale-95 transition-transform w-full">PUTAR SEKARANG</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg text-center">
+                <h3 class="text-xs font-bold text-amber-400 mb-1">🎁 PETI HARTA KARUN MISTERI</h3>
+                <p class="text-[10px] text-slate-400 mb-3">Pilih salah satu peti untuk membuka hadiah kejutan malam ini!</p>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="openBoxAction(1)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
+                    <button onclick="openBoxAction(2)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
+                    <button onclick="openBoxAction(3)" class="bg-[#1e293b] p-3 rounded-xl border border-slate-800 hover:border-amber-500/50 text-3xl active:scale-95 transition-all">📦</button>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg">
+                <h3 class="text-xs font-bold text-amber-400 text-center mb-2">✂️ ARENA SUWIT KAMPION</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="playSuwit('Batu')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✊ Batu</button>
+                    <button onclick="playSuwit('Gunting')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✂️ Gunting</button>
+                    <button onclick="playSuwit('Kertas')" class="py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700">✋ Kertas</button>
+                </div>
+            </div>
+
+            <div class="bg-[#111827] border border-slate-800 p-4 rounded-2xl shadow-lg text-center">
+                <h3 class="text-xs font-bold text-amber-400 mb-1">🧮 MATEMATIKA KILAT BERPACU</h3>
+                <p class="text-[11px] text-slate-300 font-bold my-2" id="math-question">Berapa: 12 + 15 = ?</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="answerMath(false)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">22</button>
+                    <button onclick="answerMath(true)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">27</button>
+                    <button onclick="answerMath(false)" class="py-1.5 bg-slate-800 rounded-lg text-xs font-mono">35</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="tab-tasks" class="tab-content flex-grow space-y-3 overflow-y-auto max-h-[55vh] py-2">
+            <h2 class="text-sm font-black text-amber-400 tracking-wider mb-2">📋 MISI HARIAN</h2>
+            
+            <div class="bg-[#111827] border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
                 <div>
-                    <h4 class="text-xs font-bold text-slate-200">Tonton Video Sponsor Premium</h4>
+                    <h4 class="text-xs font-bold text-slate-200">Tonton Video Klaim Bonus Premium</h4>
                     <p class="text-[10px] text-amber-500 font-medium">+150 Koin</p>
                 </div>
-                <button onclick="watchVideoTask(this)" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">TONTON IKLAN</button>
+                <button onclick="watchVideoAction(this)" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">AMBIL</button>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
+            <div class="bg-[#111827] border border-slate-800 p-3 rounded-xl flex justify-between items-center shadow-md">
                 <div>
-                    <h4 class="text-xs font-bold text-slate-200">Klaim Absen Harian Aplikasi</h4>
+                    <h4 class="text-xs font-bold text-slate-200">Klaim Hadiah Absen Masuk</h4>
                     <p class="text-[10px] text-amber-500 font-medium">+30 Koin</p>
                 </div>
-                <button onclick="claimDailyBonus(this, 30)" class="px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">KLAIM ABSEN</button>
+                <button onclick="claimDailyAction(this)" class="px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform">ABSEN</button>
             </div>
         </div>
 
+
         <div id="tab-withdraw" class="tab-content flex-grow py-2">
-            <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-2xl space-y-4">
+            <div class="bg-[#111827] border border-slate-800/90 rounded-2xl p-5 shadow-2xl space-y-4">
                 
                 <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
                     <span class="text-xl">👛</span>
@@ -126,7 +156,7 @@
 
                 <p class="text-[11px] text-slate-400 leading-relaxed">Tukarkan akumulasi koinmu menjadi saldo rupiah digital simulasi (DANA / GoPay / OVO).</p>
 
-                <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-xl flex justify-between items-center">
+                <div class="bg-[#0f172a] border border-slate-800 p-3 rounded-xl flex justify-between items-center">
                     <span class="text-xs text-slate-400">Kurs Penukaran:</span>
                     <span class="text-xs font-bold text-amber-400">10 Koin = Rp 1 Saldo</span>
                 </div>
@@ -134,13 +164,13 @@
                 <div>
                     <label class="text-[11px] text-slate-400 block mb-2">Metode Penarikan</label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="selectWallet('DANA')" id="btn-dana" class="py-2.5 bg-slate-950 border border-emerald-500/80 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
+                        <button onclick="selectWalletMethod('DANA')" id="btn-dana" class="py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
                             📲 DANA
                         </button>
-                        <button onclick="selectWallet('GoPay')" id="btn-gopay" class="py-2.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
+                        <button onclick="selectWalletMethod('GoPay')" id="btn-gopay" class="py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
                             🟢 GoPay
                         </button>
-                        <button onclick="selectWallet('OVO')" id="btn-ovo" class="py-2.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
+                        <button onclick="selectWalletMethod('OVO')" id="btn-ovo" class="py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-all">
                             🟣 OVO
                         </button>
                     </div>
@@ -149,11 +179,11 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-[11px] text-slate-400 block mb-1">Nomor Akun HP</label>
-                        <input type="text" id="wd-target" placeholder="08xxxxxxxxxx" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-xs font-mono focus:border-emerald-500 focus:outline-none">
+                        <input type="text" id="wd-target" placeholder="08xxxxxxxxxx" class="w-full p-3 rounded-xl bg-[#070a12] border border-slate-800 text-white placeholder-slate-600 text-xs font-mono focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label class="text-[11px] text-slate-400 block mb-1">Nominal (Rupiah)</label>
-                        <select id="wd-dropdown" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-emerald-500 focus:outline-none">
+                        <select id="wd-dropdown" class="w-full p-3 rounded-xl bg-[#070a12] border border-slate-800 text-white text-xs focus:border-emerald-500 focus:outline-none cursor-pointer">
                             <option value="5000">Rp 5.000 (50K Koin)</option>
                             <option value="10000">Rp 10.000 (100K Koin)</option>
                             <option value="25000">Rp 25.000 (250K Koin)</option>
@@ -162,12 +192,13 @@
                     </div>
                 </div>
 
-                <button onclick="prosesWithdrawPro()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-lg tracking-wider transition-transform active:scale-[0.98] mt-2">
+                <button onclick="executeWithdrawAction()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-lg tracking-wider transition-transform active:scale-[0.98] mt-2">
                     Klaim Pencairan Cuan
                 </button>
 
             </div>
         </div>
+
 
         <div class="w-full flex justify-center mt-3 overflow-hidden min-h-[60px]">
             <div class="max-w-full transform scale-90 origin-center">
@@ -178,17 +209,17 @@
             </div>
         </div>
 
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 p-2 flex justify-around items-center rounded-t-3xl shadow-2xl z-40">
-            <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center text-amber-400 font-bold text-[10px] gap-0.5">
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0f172a]/95 backdrop-blur-lg border-t border-slate-800 p-2 flex justify-around items-center rounded-t-3xl shadow-2xl z-40">
+            <button onclick="switchTabMenu('home')" class="nav-btn flex flex-col items-center text-amber-400 font-bold text-[10px] gap-0.5">
                 <span class="text-xl">🎮</span> Beranda
             </button>
-            <button onclick="switchTab('arcade')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
+            <button onclick="switchTabMenu('arcade')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
                 <span class="text-xl">🎯</span> Game Zone
             </button>
-            <button onclick="switchTab('tasks')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
+            <button onclick="switchTabMenu('tasks')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
                 <span class="text-xl">📋</span> Tugas Misi
             </button>
-            <button onclick="switchTab('withdraw')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
+            <button onclick="switchTabMenu('withdraw')" class="nav-btn flex flex-col items-center text-slate-400 font-medium text-[10px] gap-0.5 transition-colors">
                 <span class="text-xl">💸</span> Tarik Saldo
             </button>
         </nav>
@@ -201,61 +232,71 @@
         
         let userPhone = "081234567890"; 
         let currentCoins = 0;
-        let selectedWalletMethod = "DANA";
+        let selectedWallet = "DANA";
 
         document.getElementById('user-phone').innerText = `ID: ${userPhone}`;
         const coinsDisplay = document.getElementById('user-coins');
 
-        // AMBIL DATA AWAL (Utamakan LocalStorage HP jika offline, lalu sinkronkan ke Supabase)
-        function initCoinSystem() {
-            const savedCoins = localStorage.getItem(`coins_${userPhone}`);
-            if (savedCoins !== null) {
-                currentCoins = parseInt(savedCoins);
+        // AMBIL DATA & AUTO-SAVE LOKAL (Anti Kosong saat Browser Keluar)
+        function loadUserCoins() {
+            const localSaved = localStorage.getItem(`coins_${userPhone}`);
+            if (localSaved !== null) {
+                currentCoins = parseInt(localSaved);
                 coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
             }
-            fetchUserDataCloud();
+            fetchCloudBackup();
         }
 
-        async function fetchUserDataCloud() {
+        async function fetchCloudBackup() {
             try {
                 const response = await fetch(`${API_URL}/api/user/${userPhone}`);
                 if (response.ok) {
                     const data = await response.json();
-                    // Jika data di cloud Supabase lebih tinggi, pakai data cloud
                     if (data.coins && data.coins > currentCoins) {
                         currentCoins = data.coins;
                         localStorage.setItem(`coins_${userPhone}`, currentCoins);
                         coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
                     }
                 }
-            } catch (err) { console.error("Cloud sinkronisasi tertunda, mengaktifkan mode simpan lokal HP."); }
+            } catch (err) { console.log("Database offline, beralih ke mode aman offline HP."); }
         }
 
-        // FUNGSI SAKTI: SIMPAN LANGSUNG KE LOKAL MEMORI & DATABASE CLOUD
-        async function updateCoins(amountPlus) {
-            currentCoins += amountPlus;
-            
-            // 1. Kunci instan di HP Pengguna agar tidak bisa hilang/reset saat browser ditutup
+        // AMBIL UNTUNG & SIMPAN AMAN
+        async function applyCoinsBonus(amount) {
+            currentCoins += amount;
             localStorage.setItem(`coins_${userPhone}`, currentCoins);
             coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
 
-            // 2. Kirim cadangan ke database Supabase via Termux
             try {
                 await fetch(`${API_URL}/api/click`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: userPhone, customBonus: amountPlus })
+                    body: JSON.stringify({ phone: userPhone, customBonus: amount })
                 });
-            } catch (err) { console.error("Gagal backup cloud, data aman di penyimpanan internal HP."); }
+            } catch (err) { console.error("Cloud sinkronisasi tertunda."); }
         }
 
-        // Klik Koin Utama
-        document.getElementById('click-btn').addEventListener('click', () => {
-            updateCoins(1);
+        // ANIMASI PARTIKEL KOIN TERBANG DI BERANDA
+        document.getElementById('click-btn').addEventListener('click', (e) => {
+            applyCoinsBonus(1);
+            
+            // Membuat partikel teks "+1" melayang di atas koin
+            const container = document.getElementById('coin-container');
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle font-mono text-sm';
+            particle.innerText = '+1';
+            
+            // Atur posisi acak di sekitar koin
+            const randomX = Math.random() * 60 - 30;
+            particle.style.left = `calc(50% + ${randomX}s - 10px)`;
+            particle.style.top = '40px';
+            
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), 800);
         });
 
-        // Pengganti Tab Menu Dashboard
-        function switchTab(tabId) {
+        // NAVIGASI INTERAKTIF TAB
+        function switchTabMenu(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => {
                 el.classList.remove('text-amber-400', 'font-bold');
@@ -266,118 +307,112 @@
             event.currentTarget.classList.add('text-amber-400', 'font-bold');
         }
 
-        function triggerAd() { window.open(SMART_LINK, '_blank'); }
+        function triggerAdsterraPop() { window.open(SMART_LINK, '_blank'); }
 
-        // MINI GAMES ENGINE
-        function playSpin() {
-            triggerAd();
-            updateCoins(60);
-            alert("🎯 Roda Berputar! Kamu memenangkan +60 Koin (Tersimpan otomatis)!");
+        // PERMAINAN 1: PRO LUCKY WHEEL SPIN
+        let currentRotation = 0;
+        function spinWheelAction() {
+            triggerAdsterraPop();
+            const wheel = document.getElementById('wheel-plate');
+            
+            // Tambah putaran acak minimal 3 putaran (1080 deg)
+            const randomSpin = Math.floor(Math.random() * 360) + 1080;
+            currentRotation += randomSpin;
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                applyCoinsBonus(65);
+                alert("🎉 Selamat! Kamu mendapatkan bonus keberuntungan +65 Koin!");
+            }, 3000);
         }
 
-        function playScratch() {
-            triggerAd();
-            updateCoins(50);
-            alert("🎁 Kartu Tergosok! Hadiah misteri dicairkan +50 Koin!");
+        // PERMAINAN 2: PETI MISTERI
+        function openBoxAction(boxNum) {
+            triggerAdsterraPop();
+            applyCoinsBonus(50);
+            alert(`📦 Peti nomor ${boxNum} berhasil dibuka! Kamu menemukan +50 Koin di dalamnya!`);
         }
 
-        function playMath() {
-            triggerAd();
-            updateCoins(45);
-            alert("🧮 Jawaban Tepat! Kamu mendapatkan +45 Koin!");
+        // PERMAINAN 3: SUWIT JEPANG
+        function playSuwit(userChoice) {
+            triggerAdsterraPop();
+            applyCoinsBonus(45);
+            alert(`⚔️ Hasil: Kamu memilih ${userChoice} dan berhasil menang telat melawan AI Bot! +45 Koin ditambahkan.`);
         }
 
-        function playGuessNumber() {
-            let guess = prompt("Masukkan angka tebakanmu (1-5):");
-            if(guess) {
-                triggerAd();
-                updateCoins(40);
-                alert("🔢 Logika Jitu! Bonus +40 Koin berhasil masuk dompet!");
+        // PERMAINAN 4: MATEMATIKA KILAT
+        function answerMath(isCorrect) {
+            triggerAdsterraPop();
+            if(isCorrect) {
+                applyCoinsBonus(40);
+                alert("🧮 Jawaban Anda Tepat & Cerdas! +40 Koin masuk saldo!");
+            } else {
+                alert("Salah sedikit! Yuk coba soal berikutnya.");
             }
         }
 
-        function playRPS() {
-            triggerAd();
-            updateCoins(35);
-            alert("✂️ Suwit selesai! Koin bertambah +35 Koin!");
-        }
-
-        function watchVideoTask(btn) {
-            triggerAd();
+        // TUGAS MISI
+        function watchVideoAction(btn) {
+            triggerAdsterraPop();
             btn.disabled = true;
-            btn.innerText = "Selesai Klaim ✨";
+            btn.innerText = "Selesai ✨";
             btn.className = "px-3 py-1.5 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
-            updateCoins(150);
-            alert("📺 Video selesai ditonton! Bonus utama +150 Koin aman!");
+            applyCoinsBonus(150);
         }
 
-        function claimDailyBonus(btn, amt) {
+        function claimDailyAction(btn) {
             btn.disabled = true;
-            btn.innerText = "Claimed ✔️";
+            btn.innerText = "Selesai ✔️";
             btn.className = "px-3 py-1.5 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
-            updateCoins(amt);
-            alert("✔️ Absen hari ini tervalidasi!");
+            applyCoinsBonus(30);
         }
 
-        // WALLET MANAGEMENT
-        function selectWallet(method) {
-            selectedWalletMethod = method;
-            document.getElementById('btn-dana').className = "py-2.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
-            document.getElementById('btn-gopay').className = "py-2.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
-            document.getElementById('btn-ovo').className = "py-2.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
+        // SISTEM WITHDRAW PRO (METODE PILIHAN DOMPET)
+        function selectWalletMethod(method) {
+            selectedWallet = method;
+            document.getElementById('btn-dana').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
+            document.getElementById('btn-gopay').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
+            document.getElementById('btn-ovo').className = "py-2.5 bg-[#070a12] border border-slate-800 text-slate-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1";
 
             if (method === 'DANA') {
-                document.getElementById('btn-dana').className = "py-2.5 bg-slate-950 border border-emerald-500/80 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
+                document.getElementById('btn-dana').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
             } else if (method === 'GoPay') {
-                document.getElementById('btn-gopay').className = "py-2.5 bg-slate-950 border border-emerald-500/80 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
+                document.getElementById('btn-gopay').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
             } else if (method === 'OVO') {
-                document.getElementById('btn-ovo').className = "py-2.5 bg-slate-950 border border-emerald-500/80 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
+                document.getElementById('btn-ovo').className = "py-2.5 bg-[#070a12] border border-emerald-500 text-emerald-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1 shadow-inner";
             }
         }
 
-        async function prosesWithdrawPro() {
+        async function executeWithdrawAction() {
             const rupiahValue = parseInt(document.getElementById('wd-dropdown').value);
             const targetNumber = document.getElementById('wd-target').value;
             const coinNeeded = rupiahValue * 10; 
 
-            if (!targetNumber) {
-                alert("Harap masukkan nomor HP tujuan pencairan!");
-                return;
-            }
-            if (currentCoins < coinNeeded) {
-                alert(`Koin tidak mencukupi! Butuh ${coinNeeded.toLocaleString('id-ID')} koin untuk Rp ${rupiahValue.toLocaleString('id-ID')}`);
-                return;
-            }
+            if (!targetNumber) { alert("Harap isi nomor HP Akun E-Wallet!"); return; }
+            if (currentCoins < coinNeeded) { alert(`Koin kurang! Butuh ${coinNeeded.toLocaleString('id-ID')} koin.`); return; }
 
-            triggerAd();
+            triggerAdsterraPop();
 
             try {
                 const response = await fetch(`${API_URL}/api/withdraw`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        phone: userPhone, 
-                        amount: coinNeeded, 
-                        target: `${selectedWalletMethod} - ${targetNumber}` 
-                    })
+                    body: JSON.stringify({ phone: userPhone, amount: coinNeeded, target: `${selectedWallet} - ${targetNumber}` })
                 });
 
                 if (response.ok) {
-                    alert(`Klaim Sukses! Saldo sebesar Rp ${rupiahValue.toLocaleString('id-ID')} dikirim ke antrean ${selectedWalletMethod}.`);
-                    
-                    // Potong koin secara lokal & cloud
+                    alert(`Sukses! Klaim saldo Rp ${rupiahValue.toLocaleString('id-ID')} berhasil diajukan ke dompet ${selectedWallet}.`);
                     currentCoins -= coinNeeded;
                     localStorage.setItem(`coins_${userPhone}`, currentCoins);
                     coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
                 } else {
-                    const resData = await response.json();
-                    alert("Gagal: " + resData.message);
+                    alert("Gagal memproses transaksi penarikan.");
                 }
-            } catch (err) { alert("Terowongan Termux offline, silakan coba sesaat lagi!"); }
+            } catch (err) { alert("Terowongan server Termux offline!"); }
         }
 
-        // Jalankan sistem auto-save saat web dimuat
-        initCoinSystem();
+        // Start system
+        loadUserCoins();
     </script>
 </body>
 </html>
