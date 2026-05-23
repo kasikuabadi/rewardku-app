@@ -270,13 +270,12 @@
 (function(){
     'use strict';
     
-    // ===== KONFIGURASI DATABASE =====
-    // Ganti dengan URL & Anon Key project Supabase Anda
+    // ===== KONFIGURASI =====
     var SUPABASE_URL = 'https://rsfkzegbcnmbxqzgdguy.supabase.co';
     var SUPABASE_ANON_KEY = 'sb_publishable_5Jv5hCOZifcbbWAFxZp6IA_2PaASGIq';
     var AD_LINK = 'https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8';
     
-    // ===== STATE GLOBAL =====
+    // ===== STATE =====
     var supabase = null;
     var coins = 1000;
     var lastDaily = '';
@@ -292,8 +291,8 @@
     
     var games = [
         {id:'snake',name:'Snake Matematika',emoji:'🐍',reward:180},
-        {id:'balloon',name:'Pop Balon',emoji:'🎈',reward:120},        {id:'memory',name:'Memori Hewan',emoji:'🐶',reward:150},
-        {id:'color',name:'Tebak Warna',emoji:'🎨',reward:100},
+        {id:'balloon',name:'Pop Balon',emoji:'🎈',reward:120},
+        {id:'memory',name:'Memori Hewan',emoji:'🐶',reward:150},        {id:'color',name:'Tebak Warna',emoji:'🎨',reward:100},
         {id:'math',name:'Math Super',emoji:'🧠',reward:140}
     ];
     var wheelParts = [
@@ -304,7 +303,7 @@
         {n:'MERAH',h:'#ef4444'},{n:'BIRU',h:'#3b82f6'},{n:'HIJAU',h:'#10b981'},{n:'KUNING',h:'#fbbf24'}
     ];
     
-    // ===== INISIALISASI =====
+    // ===== INIT =====
     try {
         if(typeof window.supabase !== 'undefined') {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -321,8 +320,6 @@
         updateBal(); renderGames(); buildWheel(); genMath(); genCap(); calcWD(); checkDaily(); renderWdHistory();
         initPTR(); initScrollRefresh();
         setupModalClose('adModal'); setupModalClose('gameModal'); setupModalClose('policyModal');
-        
-        // Auto refresh status setiap 45 detik
         startAutoPolling();
     });
     
@@ -341,10 +338,10 @@
         var vp = document.getElementById('viewport');
         vp.scrollTo({left: idx * vp.clientWidth, behavior: 'smooth'});
         var btns = document.querySelectorAll('.nav-button');
-        for(var i=0; i<btns.length; i++) { btns[i].classList.remove('active'); }        var active = document.getElementById('nav-'+idx);
+        for(var i=0; i<btns.length; i++) { btns[i].classList.remove('active'); }
+        var active = document.getElementById('nav-'+idx);
         if(active) { active.classList.add('active'); }
-        if(Math.random() > 0.9) { openAd(100, 'nav'); }
-    }
+        if(Math.random() > 0.9) { openAd(100, 'nav'); }    }
     
     // ===== SALDO =====
     function updateBal() {
@@ -390,10 +387,10 @@
             if(adSec <= 0) {
                 clearInterval(adTimer); adReady = true;
                 if(btnCancel) { btnCancel.style.display = 'none'; }
-                if(btnClaim) { btnClaim.style.display = 'block'; }                var txt = document.getElementById('adTimerText');
+                if(btnClaim) { btnClaim.style.display = 'block'; }
+                var txt = document.getElementById('adTimerText');
                 if(txt) { txt.textContent = '✅ Siap Klaim!'; }
-            }
-        }, 1000);
+            }        }, 1000);
     }
     function updateAdUI() {
         var pct = ((15-adSec)/15)*100;
@@ -439,10 +436,10 @@
         while(opts.length < 4) {
             var r = mathAns + Math.floor(Math.random()*10) - 5;
             if(r !== mathAns && opts.indexOf(r) === -1) { opts.push(r); }
-        }        opts.sort(function(){ return Math.random() - 0.5; });
+        }
+        opts.sort(function(){ return Math.random() - 0.5; });
         var container = document.getElementById('mathAns');
-        if(!container) { return; }
-        container.innerHTML = '';
+        if(!container) { return; }        container.innerHTML = '';
         for(var i=0; i<opts.length; i++) {
             (function(val){
                 var btn = document.createElement('button');
@@ -488,10 +485,10 @@
         if(!wheel) { return; }
         wheel.innerHTML = '';
         var step = 360 / wheelParts.length;
-        for(var i=0; i<wheelParts.length; i++) {            var p = wheelParts[i];
+        for(var i=0; i<wheelParts.length; i++) {
+            var p = wheelParts[i];
             var seg = document.createElement('div');
-            seg.className = 'wheel-segment';
-            seg.style.background = p.c;
+            seg.className = 'wheel-segment';            seg.style.background = p.c;
             seg.style.transform = 'rotate('+(i*step)+'deg) skewY(-'+(90-step)+'deg)';
             seg.innerHTML = '<span style="transform:skewY('+(90-step)+'deg) rotate('+(step/2)+'deg)">'+p.l+'</span>';
             wheel.appendChild(seg);
@@ -535,12 +532,12 @@
         box.innerHTML = html;
     }
     
-    // ===== WITHDRAW REAL (USER FACING) =====
+    // ===== WITHDRAW REAL =====
     function selWD(el) {
-        var cards = document.querySelectorAll('.wd-card');        for(var i=0; i<cards.length; i++) { cards[i].classList.remove('active'); }
+        var cards = document.querySelectorAll('.wd-card');
+        for(var i=0; i<cards.length; i++) { cards[i].classList.remove('active'); }
         el.classList.add('active'); wdMethod = el.dataset.m;
-    }
-    function calcWD() {
+    }    function calcWD() {
         var sel = document.getElementById('wdAmt');
         var need = document.getElementById('wdNeed');
         if(!sel || !need) { return; }
@@ -550,7 +547,6 @@
     
     function submitWD() {
         if(!debounce('wd', 2000)) { return; }
-        
         var numEl = document.getElementById('wdNum');
         var amtEl = document.getElementById('wdAmt');
         var btn = document.getElementById('btnSubmitWD');
@@ -560,7 +556,6 @@
         var amt = parseInt(amtEl.value);
         var need = amt * 10;
         
-        // Validasi ketat
         if(!num || num.length < 10 || !/^[0-9]+$/.test(num)) { 
             toast('⚠️ Nomor HP tidak valid (10-13 digit)', 'err'); return; 
         }
@@ -569,32 +564,29 @@
         }
         if(amt < 5000) { toast('⚠️ Minimal pencairan Rp 5.000', 'err'); return; }
         
-        // Loading UI
         var originalHTML = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Mengirim ke server...';
         
-        // KIRIM KE SUPABASE (REAL)
-        supabase.from('withdrawals').insert([{
+        var payload = {
             phone_number: num,
             payment_method: wdMethod,
             nominal: amt,
             coins_used: need,
             status: 'pending',
             created_at: new Date().toISOString()
-        }]).select('id').then(function(response) {
+        };
+        
+        supabase.from('withdrawals').insert([payload]).select('id').then(function(response) {
             if(response.error) { throw response.error; }
-            
-            // Berhasil disimpan di database
-            var wdId = response.data[0].id;            coins -= need;
+            var wdId = response.data[0].id;
+            coins -= need;
             updateBal();
             
-            // Simpan ke riwayat lokal untuk tracking
             wdHistory.unshift({
                 id: wdId,
                 phone: num,
-                method: wdMethod,
-                amount: amt,
+                method: wdMethod,                amount: amt,
                 coins: need,
                 status: 'pending',
                 created: new Date().toLocaleString('id')
@@ -608,11 +600,10 @@
             numEl.value = '';
             renderWdHistory();
             startAutoPolling();
-            
         }).catch(function(err) {
             console.error('Withdraw Error:', err);
             toast('❌ Gagal kirim: ' + (err.message || 'Periksa koneksi internet'), 'err');
-        }).finally(function() {
+        }).then(function() {
             btn.disabled = false;
             btn.innerHTML = originalHTML;
         });
@@ -635,7 +626,8 @@
                              h.status === 'success' ? '✅ Berhasil' : '❌ Ditolak';
             
             html += '<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">';
-            html += '<div style="display:flex;justify-content:space-between;align-items:center">';            html += '<div><strong style="color:var(--text-primary)">'+h.method+' - Rp '+h.amount.toLocaleString('id')+'</strong></div>';
+            html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+            html += '<div><strong style="color:var(--text-primary)">'+h.method+' - Rp '+h.amount.toLocaleString('id')+'</strong></div>';
             html += '<span class="wd-status '+statusClass+'">'+statusLabel+'</span>';
             html += '</div>';
             html += '<div style="color:var(--text-secondary);font-size:9px;margin-top:2px">'+h.created+' • -'+h.coins.toLocaleString('id')+' koin • ID: '+h.id.substring(0,6).toUpperCase()+'</div>';
@@ -643,8 +635,7 @@
                 html += '<div style="color:var(--accent-blue);font-size:9px;margin-top:2px">📝 '+h.admin_note+'</div>';
             }
             html += '</div>';
-        }
-        box.innerHTML = html;
+        }        box.innerHTML = html;
     }
     
     function refreshWdStatus() {
@@ -674,7 +665,6 @@
                                 toast('🎉 Pencairan #' + res.data[j].id.substring(0,6).toUpperCase() + ' BERHASIL!', 'success');
                             } else if(res.data[j].status === 'failed') {
                                 toast('❌ Pencairan ditolak. Cek catatan admin.', 'err');
-                                // Refund koin jika ditolak
                                 coins += wdHistory[i].coins;
                                 updateBal();
                             }
@@ -684,7 +674,8 @@
             }
             if(updated) {
                 localStorage.setItem('rk_wd_history', JSON.stringify(wdHistory));
-                renderWdHistory();            } else {
+                renderWdHistory();
+            } else {
                 toast('✅ Status tetap. Belum ada perubahan.', '');
             }
         }).catch(function(err){
@@ -693,14 +684,13 @@
     }
     
     function startAutoPolling() {
-        if(pollingInterval) { clearInterval(pollingInterval); }
-        pollingInterval = setInterval(function(){
+        if(pollingInterval) { clearInterval(pollingInterval); }        pollingInterval = setInterval(function(){
             var hasPending = false;
             for(var i=0; i<wdHistory.length; i++) {
                 if(wdHistory[i].status === 'pending' || wdHistory[i].status === 'processing') { hasPending = true; break; }
             }
             if(hasPending && supabase) { refreshWdStatus(); }
-        }, 45000); // Cek otomatis setiap 45 detik
+        }, 45000);
     }
     
     // ===== HARIAN & ACHIEVEMENT =====
@@ -733,7 +723,8 @@
         toast('🏆 +' + rw + ' Koin');
     }
     
-    // ===== GAME ENGINE =====    function startGame(g) {
+    // ===== GAME ENGINE =====
+    function startGame(g) {
         if(!debounce('game'+g.id, 500)) { return; }
         gameActive = g.id; gameScore = 0; gameMax = g.reward;
         var title = document.getElementById('gTitle');
@@ -742,8 +733,7 @@
         if(title) { title.textContent = '🎮 ' + g.name; }
         if(score) { score.textContent = '0'; }
         if(pot) { pot.textContent = '0'; }
-        var cv = document.getElementById('gCanvas');
-        var bb = document.getElementById('balloonBox');
+        var cv = document.getElementById('gCanvas');        var bb = document.getElementById('balloonBox');
         var mb = document.getElementById('memoryBox');
         var dp = document.getElementById('dpad');
         var cb = document.getElementById('colorBtns');
@@ -782,7 +772,8 @@
         if(dir === 'LEFT' && snakeDir !== 'RIGHT') { snakeDir = 'LEFT'; }
         if(dir === 'RIGHT' && snakeDir !== 'LEFT') { snakeDir = 'RIGHT'; }
     }
-        // ===== SNAKE =====
+    
+    // ===== SNAKE =====
     function initSnake(cv) {
         if(!cv) { return; }
         var ctx = cv.getContext('2d');
@@ -791,8 +782,7 @@
         var b = Math.floor(Math.random()*5)+1;
         snakeTarget = a + b;
         fakeAns = snakeTarget + Math.floor(Math.random()*5)+1;
-        if(fakeAns === snakeTarget) { fakeAns++; }
-        snakeAns = {x:Math.floor(Math.random()*12)*20+20, y:Math.floor(Math.random()*12)*20+20};
+        if(fakeAns === snakeTarget) { fakeAns++; }        snakeAns = {x:Math.floor(Math.random()*12)*20+20, y:Math.floor(Math.random()*12)*20+20};
         snakeWrong = {x:Math.floor(Math.random()*12)*20+20, y:Math.floor(Math.random()*12)*20+20};
         gameLoop = setInterval(function(){
             var head = {x:snake[0].x, y:snake[0].y};
@@ -831,7 +821,8 @@
         if(p) { p.textContent = Math.min(gameScore, gameMax); }
     }
     
-    // ===== BALLOON =====    function initBalloon(bx) {
+    // ===== BALLOON =====
+    function initBalloon(bx) {
         if(!bx) { return; }
         var letters = ['A','B','C','D','E','F'];
         var target = letters[Math.floor(Math.random()*letters.length)];
@@ -840,8 +831,7 @@
         if(title) { title.textContent = '🎈 Cari: [ ' + target + ' ]'; }
         var cols = ['#ec4899','#3b82f6','#10b981','#fbbf24','#f97316'];
         for(var i=0; i<letters.length; i++) {
-            (function(l){
-                var b = document.createElement('div');
+            (function(l){                var b = document.createElement('div');
                 b.className = 'balloon';
                 var c = cols[Math.floor(Math.random()*cols.length)];
                 b.style.color = c; b.style.backgroundColor = c+'22'; b.style.border = '2px solid '+c;
@@ -880,7 +870,8 @@
                             first = null; lock = false;
                         }, 800);
                     }
-                };                bx.appendChild(card);
+                };
+                bx.appendChild(card);
             })(cards[i]);
         }
     }
@@ -889,8 +880,7 @@
     function initColor(cv) {
         if(!cv) { return; }
         var ctx = cv.getContext('2d');
-        var txt = colors[Math.floor(Math.random()*colors.length)];
-        var match = Math.random() > 0.5;
+        var txt = colors[Math.floor(Math.random()*colors.length)];        var match = Math.random() > 0.5;
         var vis = match ? txt : colors[Math.floor(Math.random()*colors.length)];
         window.colorTargetText = txt.n; window.colorTargetHex = vis.h;
         ctx.fillStyle = '#0b0f19'; ctx.fillRect(0,0,280,280);
@@ -929,7 +919,8 @@
         opts.sort(function(){ return Math.random() - 0.5; });
         var areas = [];
         for(var i=0; i<opts.length; i++) {
-            var x = 12 + i*84, y = 200, w = 72, h = 40;            ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            var x = 12 + i*84, y = 200, w = 72, h = 40;
+            ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.strokeStyle = 'rgba(255,255,255,0.15)';
             ctx.fillRect(x,y,w,h); ctx.strokeRect(x,y,w,h);
             ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif';
             ctx.fillText(opts[i].toString(), x+22, y+26);
@@ -938,8 +929,7 @@
         cv.onclick = function(e) {
             var rect = cv.getBoundingClientRect();
             var cx = ((e.clientX - rect.left) / rect.width) * 280;
-            var cy = ((e.clientY - rect.top) / rect.height) * 280;
-            for(var i=0; i<areas.length; i++) {
+            var cy = ((e.clientY - rect.top) / rect.height) * 280;            for(var i=0; i<areas.length; i++) {
                 var ar = areas[i];
                 if(cx >= ar.x && cx <= ar.x+ar.w && cy >= ar.y && cy <= ar.y+ar.h) {
                     if(ar.v === correct) { gameScore += 22; updGameScore(); toast('🧠 Pintar!'); }
@@ -978,7 +968,8 @@
                     ptr.classList.remove('refreshing');
                     if(txt) { txt.textContent = '⬇️ Tarik untuk refresh'; }
                 }
-            }        }, {passive:false});
+            }
+        }, {passive:false});
         document.addEventListener('touchend', function(){
             if(pulling) {
                 pulling = false; canPull = false;
@@ -987,8 +978,7 @@
                 if(ptr.classList.contains('refreshing')) { doRefresh(); }
             }
         }, {passive:true});
-    }
-    function doRefresh() {
+    }    function doRefresh() {
         var txt = document.getElementById('ptrText');
         if(txt) { txt.textContent = 'Memuat...'; }
         setTimeout(function(){ location.reload(); }, 800);
@@ -1027,7 +1017,8 @@
             title.textContent = 'Kebijakan Privasi';
             text.innerHTML = 'Kami tidak melacak lokasi, tidak mengumpulkan riwayat pencarian. Data hanya digunakan untuk pencairan saldo e-wallet yang sah. Semua transmisi dienkripsi.';
         } else if(tp === 'security') {
-            title.textContent = 'Keamanan Data';            text.innerHTML = 'Arsitektur leksikal tertutup melindungi konfigurasi database. Validasi tanda tangan digital di setiap transaksi mencegah manipulasi.';
+            title.textContent = 'Keamanan Data';
+            text.innerHTML = 'Arsitektur leksikal tertutup melindungi konfigurasi database. Validasi tanda tangan digital di setiap transaksi mencegah manipulasi.';
         } else {
             title.textContent = 'Syarat & Ketentuan';
             text.innerHTML = 'Pengguna wajib berusia 13+. Dilarang menggunakan bot/automasi. Pelanggaran mengakibatkan pemblokiran akun. RewardKu berhak mengubah ketentuan sewaktu-waktu.';
@@ -1036,8 +1027,7 @@
     }
     function closePolicy() {
         var modal = document.getElementById('policyModal');
-        if(modal) { modal.classList.remove('active'); }
-    }
+        if(modal) { modal.classList.remove('active'); }    }
     function setupModalClose(id) {
         var modal = document.getElementById(id);
         if(!modal) { return; }
@@ -1056,6 +1046,27 @@
         if(now - lastTouchEnd <= 300) { e.preventDefault(); }
         lastTouchEnd = now;
     }, false);
+    
+    // ===== EXPOSE TO GLOBAL SCOPE (For inline onclick) =====
+    window.nav = nav;
+    window.openAd = openAd;
+    window.claimDaily = claimDaily;
+    window.claimAchievement = claimAchievement;
+    window.showPolicy = showPolicy;
+    window.submitWD = submitWD;
+    window.selWD = selWD;
+    window.calcWD = calcWD;
+    window.refreshWdStatus = refreshWdStatus;
+    window.verifyCap = verifyCap;
+    window.spinWheel = spinWheel;
+    window.startGame = startGame;
+    window.closeGame = closeGame;
+    window.cmd = cmd;
+    window.colorAns = colorAns;
+    window.cancelAd = cancelAd;
+    window.claimAd = claimAd;
+    window.doubleReward = doubleReward;
+    window.closePolicy = closePolicy;
     
 })();
 </script>
