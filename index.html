@@ -3,473 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RewardKu by Arka Studio - Adsterra Edition</title>
+    <title>RewardKu - Premium Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(3600deg); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        .floating-coin { animation: float 3s ease-in-out infinite; }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 99px; }
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.2)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.6)); }
+        }
+        .coin-glow { animation: pulse-glow 3s infinite ease-in-out; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
 
-    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30 px-4 py-3">
-        <div class="max-w-md mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="bg-gradient-to-tr from-amber-500 to-yellow-400 p-2 rounded-xl shadow-lg shadow-amber-500/20">
-                    <i class="fa-solid fa-coins text-slate-950 text-lg"></i>
+    <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4 pb-24 relative">
+        
+        <header class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-2xl flex justify-between items-center mb-3 border border-slate-800">
+            <div class="flex flex-col">
+                <div class="flex items-center gap-2">
+                    <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">REWARDKU</h1>
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" title="Server Online"></span>
                 </div>
-                <div>
-                    <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent">RewardKu</h1>
-                    <p class="text-[9px] text-slate-400 uppercase tracking-widest font-semibold flex items-center gap-1">
-                        <span>by Arka Studio</span>
-                        <span class="w-1 h-1 rounded-full bg-amber-500"></span>
-                        <span class="text-amber-400">v3.5 ADSTERRA</span>
-                    </p>
-                </div>
+                <p id="user-phone" class="text-xs text-slate-400 font-mono mt-0.5">ID: Memuat...</p>
             </div>
-            
-            <div class="flex items-center gap-1.5">
-                <div class="bg-slate-800 px-2 py-1 rounded-full border border-slate-700 flex items-center gap-1">
-                    <span class="text-amber-400 text-[10px]"><i class="fa-solid fa-coins"></i></span>
-                    <span id="headerCoins" class="text-xs font-black text-amber-300">0</span>
-                </div>
-                <div class="bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1">
-                    <span class="text-emerald-400 text-[10px]"><i class="fa-solid fa-wallet"></i></span>
-                    <span id="headerBalance" class="text-xs font-black text-emerald-300">Rp 0</span>
-                </div>
+            <div class="bg-slate-950/80 px-4 py-2 rounded-xl border border-amber-500/20 flex items-center gap-2 shadow-inner">
+                <span class="text-xl animate-spin-slow">🪙</span>
+                <span id="user-coins" class="font-black text-amber-400 text-lg tracking-wide">0</span>
+            </div>
+        </header>
+
+        <div class="bg-slate-900 px-3 py-1.5 rounded-lg text-[11px] text-slate-400 mb-4 overflow-hidden border border-slate-800 flex items-center gap-2">
+            <span class="text-amber-500 font-bold shrink-0">📢 LIVE:</span>
+            <marquee class="w-full">0852***9129 berhasil menarik Rp 10.000 (Dana) • 0813***0041 berhasil menarik Rp 25.000 (Ovo) • 0878***3321 menukarkan 5.000 koin • </marquee>
+        </div>
+
+        <div class="w-full flex justify-center mb-4 min-h-[50px]">
+            <script>
+              atOptions = {
+                'key' : 'e09b85ce63c196e932ec644f78690a61',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            </script>
+            <script src="https://revolthem.com/e09b85ce63c196e932ec644f78690a61/invoke.js"></script>
+        </div>
+
+        <main class="flex-grow flex flex-col items-center justify-center my-auto py-4">
+            <button id="click-btn" class="coin-glow w-44 h-44 bg-gradient-to-b from-amber-400 via-amber-500 to-orange-600 rounded-full shadow-[0_0_50px_rgba(245,158,11,0.15)] flex items-center justify-center border-[6px] border-amber-300/90 active:scale-95 transition-all duration-75 focus:outline-none cursor-pointer">
+                <span class="text-7xl select-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">🪙</span>
+            </button>
+        </main>
+
+        <div class="w-full flex justify-center mt-4 overflow-hidden min-h-[60px]">
+            <div class="max-w-full transform scale-90 origin-center">
+                <script>
+                  atOptions = {
+                    'key' : '248658b5ecde7db9470724760291795c',
+                    'format' : 'iframe',
+                    'height' : 60,
+                    'width' : 468,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://revolthem.com/248658b5ecde7db9470724760291795c/invoke.js"></script>
             </div>
         </div>
-    </header>
 
-    <div class="max-w-md w-full mx-auto px-4 mt-2">
-        <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-1 text-center">
-            <p class="text-[9px] text-slate-600 uppercase font-bold mb-1">Sponsor Link</p>
-            
-            <div class="text-xs text-slate-500 italic p-2 bg-slate-950 rounded border border-dashed border-slate-800">
-                [Slot Iklan Banner Atas - Ganti dengan script Adsterra Anda nanti]
-            </div>
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 p-3 flex justify-around items-center rounded-t-3xl shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-40">
+            <button onclick="switchTab('game')" class="flex flex-col items-center text-amber-400 font-bold text-xs gap-1">
+                <span class="text-xl">🎮</span> Beranda
+            </button>
+            <button onclick="openWdModal()" class="flex flex-col items-center text-slate-400 hover:text-amber-400 font-medium text-xs gap-1 transition-colors">
+                <span class="text-xl">💸</span> Tarik Saldo
+            </button>
+        </nav>
 
-        </div>
     </div>
 
-    <main id="userPanel" class="flex-grow max-w-md w-full mx-auto px-4 py-2 space-y-4 pb-28">
-
-        <div class="bg-gradient-to-br from-amber-500/20 via-slate-900 to-slate-900 border-2 border-amber-500/30 rounded-2xl p-4 space-y-3 relative overflow-hidden shadow-xl">
-            <div class="space-y-1">
-                <span class="bg-amber-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider">Cuan Tinggi</span>
-                <h3 class="text-base font-black text-slate-100 mt-1 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-play text-amber-400"></i> Tonton Video Sponsor
-                </h3>
-                <p class="text-[11px] text-slate-400">Tonton video interaktif selama 10 detik penuh untuk mendapatkan reward koin terbesar.</p>
+    <div id="wd-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xs p-6 relative shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-black bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Penarikan Dana</h2>
+                <button onclick="closeWdModal()" class="text-slate-500 hover:text-white text-sm font-mono p-1">✕</button>
             </div>
-            <button onclick="startVideoAdSimulation()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-black rounded-xl transition active:scale-95 shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-clapperboard"></i> Ambil +1.000 Koin Sekarang
-            </button>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-1.5 grid grid-cols-3 gap-1 shadow-inner">
-            <button onclick="switchTab('tab-captcha')" id="btn-tab-captcha" class="tab-btn py-2 text-center rounded-xl text-[10px] font-bold transition flex flex-col items-center gap-1 bg-amber-500 text-slate-950">
-                <i class="fa-solid fa-keyboard text-xs"></i>
-                <span>Captcha</span>
-            </button>
-            <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn py-2 text-center rounded-xl text-[10px] font-bold transition flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-800">
-                <i class="fa-solid fa-calculator text-xs"></i>
-                <span>Kuis Matematika</span>
-            </button>
-            <button onclick="switchTab('tab-spin')" id="btn-tab-spin" class="tab-btn py-2 text-center rounded-xl text-[10px] font-bold transition flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-800">
-                <i class="fa-solid fa-circle-notch text-xs"></i>
-                <span>Roda Keberuntungan</span>
-            </button>
-        </div>
-
-        <div class="space-y-4">
-            <div id="tab-captcha" class="tab-content bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-keyboard text-amber-400"></i> Input Captcha
-                    </h3>
-                    <span class="text-[9px] bg-slate-850 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/10 font-bold">+100 Koin</span>
-                </div>
-                <div class="bg-gradient-to-r from-slate-950 to-slate-900 border-2 border-dashed border-slate-800 rounded-xl py-4 flex items-center justify-center relative overflow-hidden select-none">
-                    <span id="captchaDisplay" class="text-2xl font-black tracking-widest text-slate-200 italic line-through animate-pulse" style="font-family: monospace;">A8b9X</span>
-                    <button onclick="generateCaptcha()" class="absolute right-3 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-rotate-right"></i></button>
-                </div>
-                <form id="captchaForm" class="space-y-3">
-                    <input type="text" id="captchaInput" placeholder="Ketik kode di atas" required autocomplete="off"
-                        class="w-full text-center px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl font-bold tracking-widest focus:outline-none focus:border-amber-500 text-slate-100">
-                    <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition">
-                        Kirim Jawaban
-                    </button>
-                </form>
-            </div>
-
-            <div id="tab-quiz" class="tab-content hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-calculator text-amber-400"></i> Kuis Matematika
-                    </h3>
-                    <span class="text-[9px] bg-slate-850 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/10 font-bold">+150 Koin</span>
-                </div>
-                <div class="bg-gradient-to-r from-slate-950 to-slate-900 border-2 border-dashed border-slate-800 rounded-xl py-4 flex items-center justify-center text-xl font-black tracking-wider text-amber-400" id="quizDisplay">
-                    0 + 0 = ?
-                </div>
-                <div class="grid grid-cols-2 gap-2.5" id="quizOptionsContainer"></div>
-            </div>
-
-            <div id="tab-spin" class="tab-content hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-5 shadow-md flex flex-col items-center">
-                <div class="w-full flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-notch text-amber-400"></i> Roda Keberuntungan
-                    </h3>
-                    <span class="text-[9px] bg-slate-850 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/10 font-bold">Up to 1000 Koin</span>
-                </div>
-                <div class="relative w-44 h-44 flex items-center justify-center my-1 select-none">
-                    <div class="absolute top-0 z-10 text-rose-500 text-2xl transform -translate-y-3.5 filter drop-shadow">
-                        <i class="fa-solid fa-caret-down"></i>
-                    </div>
-                    <svg id="wheelSvg" class="w-full h-full transform transition-transform duration-[4000ms] cubic-bezier(0.15, 0.85, 0.35, 1)" viewBox="0 0 200 200">
-                        <g transform="translate(100,100)">
-                            <path d="M 0 0 L 0 -100 A 100 100 0 0 1 86.6 -50 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/>
-                            <path d="M 0 0 L 86.6 -50 A 100 100 0 0 1 86.6 50 Z" fill="#334155" stroke="#0f172a" stroke-width="2"/>
-                            <path d="M 0 0 L 86.6 50 A 100 100 0 0 1 0 100 Z" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
-                            <path d="M 0 0 L 0 100 A 100 100 0 0 1 -86.6 50 Z" fill="#3b82f6" stroke="#0f172a" stroke-width="2"/>
-                            <path d="M 0 0 L -86.6 50 A 100 100 0 0 1 -86.6 -50 Z" fill="#a855f7" stroke="#0f172a" stroke-width="2"/>
-                            <path d="M 0 0 L -86.6 -50 A 100 100 0 0 1 0 -100 Z" fill="#ef4444" stroke="#0f172a" stroke-width="2"/>
-                            
-                            <text x="25" y="-60" fill="#0f172a" font-size="9" font-weight="900" transform="rotate(30)">1000</text>
-                            <text x="55" y="-5" fill="#f1f5f9" font-size="9" font-weight="900" transform="rotate(90)">ZONK</text>
-                            <text x="25" y="55" fill="#0f172a" font-size="9" font-weight="900" transform="rotate(150)">100</text>
-                            <text x="-40" y="45" fill="#f1f5f9" font-size="9" font-weight="900" transform="rotate(210)">50</text>
-                            <text x="-65" y="-10" fill="#f1f5f9" font-size="9" font-weight="900" transform="rotate(270)">500</text>
-                            <text x="-40" y="-60" fill="#f1f5f9" font-size="9" font-weight="900" transform="rotate(330)">200</text>
-                        </g>
-                    </svg>
-                    <div class="absolute w-10 h-10 rounded-full bg-slate-900 border-4 border-slate-700 flex items-center justify-center text-xs font-black shadow-lg">ARKA</div>
-                </div>
-                <button id="spinBtn" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs rounded-xl transition">
-                    Mulai Putar Roda
-                </button>
-            </div>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
-            <p class="text-[9px] text-slate-600 uppercase font-bold mb-1.5">Sponsor Banner</p>
             
-            <div class="text-xs text-slate-500 italic py-4 bg-slate-950 rounded border border-dashed border-slate-800">
-                [Slot Iklan Banner Tengah - Ganti dengan script Adsterra Anda nanti]
-            </div>
-
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
-            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-wallet text-emerald-400"></i> Ajukan Penarikan (WD)
-            </h3>
-            <form id="wdForm" class="space-y-3.5">
+            <div class="space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Pilih E-Wallet Penerima</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button type="button" onclick="selectWdMethod('DANA')" id="wd-dana" class="wd-method-btn py-2 text-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-bold transition flex items-center justify-center gap-1">📲 DANA</button>
-                        <button type="button" onclick="selectWdMethod('GoPay')" id="wd-gopay" class="wd-method-btn py-2 text-center rounded-xl border border-slate-800 bg-slate-850 text-slate-400 text-xs font-bold transition flex items-center justify-center gap-1">🟢 GoPay</button>
-                        <button type="button" onclick="selectWdMethod('OVO')" id="wd-ovo" class="wd-method-btn py-2 text-center rounded-xl border border-slate-800 bg-slate-850 text-slate-400 text-xs font-bold transition flex items-center justify-center gap-1">🟣 OVO</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label for="wdPhone" class="block text-xs font-semibold text-slate-400 mb-1">Nomor Akun HP</label>
-                        <input type="tel" id="wdPhone" required placeholder="08xxxxxxxxx" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs focus:outline-none focus:border-amber-500 text-slate-200">
-                    </div>
-                    <div>
-                        <label for="wdName" class="block text-xs font-semibold text-slate-400 mb-1">Nama Penerima</label>
-                        <input type="text" id="wdName" required placeholder="Nama Lengkap" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs focus:outline-none focus:border-amber-500 text-slate-200">
-                    </div>
+                    <label class="text-[11px] text-slate-400 block mb-1 font-medium">Jumlah Koin (Min. 1.000)</label>
+                    <input type="number" id="wd-amount" placeholder="Contoh: 1000" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none font-mono">
                 </div>
                 <div>
-                    <label for="wdAmount" class="block text-xs font-semibold text-slate-400 mb-1">Nominal Penarikan</label>
-                    <select id="wdAmount" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs focus:outline-none focus:border-amber-500 text-slate-200 font-bold">
-                        <option value="5000">Rp 5.000 (50.000 Koin)</option>
-                        <option value="10000">Rp 10.000 (100.000 Koin)</option>
-                        <option value="25000">Rp 25.000 (250.000 Koin)</option>
-                    </select>
+                    <label class="text-[11px] text-slate-400 block mb-1 font-medium">Nomor Tujuan E-Wallet</label>
+                    <input type="text" id="wd-target" placeholder="Nomor DANA / OVO / GOPAY" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none font-mono">
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl transition shadow-lg">
-                    Ajukan Penarikan Manual
-                </button>
-            </form>
-        </div>
+            </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-md">
-            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-receipt text-slate-400"></i> Riwayat Pengajuan Anda
-            </h3>
-            <div id="userWdHistory" class="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scroll"></div>
-            <div id="emptyUserWdHistory" class="hidden flex flex-col items-center justify-center py-6 text-slate-500 text-center">
-                <i class="fa-solid fa-money-check-dollar text-xl mb-1.5"></i>
-                <p class="text-[10px]">Belum ada penarikan.</p>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeWdModal()" class="w-1/2 py-3 bg-slate-800 text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-700 active:scale-95 transition-all">BATAL</button>
+                <button onclick="prosesWithdraw()" class="w-1/2 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black text-xs rounded-xl hover:from-amber-400 hover:to-orange-500 active:scale-95 transition-all shadow-lg shadow-orange-600/20 tracking-wider">KIRIM WD</button>
             </div>
         </div>
-    </main>
-
-    <main id="adminPanel" class="hidden flex-grow max-w-lg w-full mx-auto px-4 py-6 space-y-6">
-        <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-            <div>
-                <h2 class="text-base font-bold text-slate-100 flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-rose-500"></i> Panel Admin Arka Studio</h2>
-                <p class="text-[10px] text-slate-400">Validasi Data & Manajemen Transfer Manual</p>
-            </div>
-            <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-slate-800 text-xs font-bold rounded-xl transition">Keluar</button>
-        </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
-            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-clock text-yellow-500"></i> Antrean Pembayaran (<span id="pendingCount">0</span>)
-            </h3>
-            <div id="adminPendingList" class="space-y-3 max-h-80 overflow-y-auto pr-1 custom-scroll"></div>
-            <div id="emptyAdminPending" class="hidden flex flex-col items-center justify-center py-12 text-slate-500 text-center">
-                <p class="text-[11px]">Semua antrean pembayaran penarikan selesai ditransfer manual.</p>
-            </div>
-        </div>
-    </main>
-
-    <div id="adOverlay" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 opacity-0 pointer-events-none transition-all duration-500">
-        <div class="text-center space-y-6 max-w-xs">
-            <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
-                <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-t-amber-500 rounded-full" style="animation: spin 1.5s linear infinite;"></div>
-                <i class="fa-solid fa-clapperboard text-3xl text-amber-400"></i>
-            </div>
-            <div class="space-y-2">
-                <h3 class="text-base font-black tracking-wide text-amber-400">MENAMPILKAN IKLAN SPONSOR</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">Jangan tutup halaman ini. Koin akan dikreditkan otomatis setelah video selesai ditayangkan.</p>
-            </div>
-            <div id="adCountdown" class="text-4xl font-black text-slate-100 bg-slate-900/80 px-6 py-2 rounded-2xl border border-slate-800 inline-block font-mono">10</div>
-        </div>
-        <p class="absolute bottom-6 text-[10px] text-slate-600 font-mono">[Link Adsterra Popunder dipicu terbuka di latar belakang saat ini]</p>
-    </div>
-
-    <footer class="fixed bottom-0 left-0 right-0 py-3 bg-slate-950/80 border-t border-slate-900 backdrop-blur-md text-center z-40">
-        <div class="max-w-md mx-auto flex justify-between items-center px-4 text-xs text-slate-500">
-            <span>© 2026 Arka Studio</span>
-            <button onclick="promptAdminLogin()" class="hover:text-amber-400 transition font-bold flex items-center gap-1"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
-        </div>
-    </footer>
-
-    <div id="adminLoginModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-slate-850 rounded-2xl max-w-xs w-full p-6 text-center space-y-4 transform scale-95 transition-transform duration-300">
-            <h3 class="text-sm font-bold text-slate-200">Verifikasi Admin Arka</h3>
-            <form id="adminLoginForm" class="space-y-3">
-                <input type="password" id="adminPasswordInput" placeholder="Masukkan Sandi Admin" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-center font-bold text-xs">
-                <div class="flex gap-2">
-                    <button type="button" onclick="closeAdminModal()" class="w-1/2 py-2 bg-slate-800 text-slate-400 text-xs rounded-xl">Batal</button>
-                    <button type="submit" class="w-1/2 py-2 bg-rose-600 text-slate-950 font-black text-xs rounded-xl">Masuk</button>
-                </div>
-            </form>
-            <p class="text-[9px] text-slate-500">Sandi default belajar: <code class="bg-slate-950 px-1 rounded text-rose-400">arka123</code></p>
-        </div>
-    </div>
-
-    <div id="mainToast" class="fixed bottom-24 right-4 transform translate-x-80 opacity-0 bg-slate-900 border border-slate-850 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50">
-        <div id="toastIcon" class="bg-amber-500/20 text-amber-400 p-1.5 rounded-lg text-sm"><i class="fa-solid fa-coins animate-bounce"></i></div>
-        <p id="toastText" class="text-xs text-slate-300 font-medium"></p>
     </div>
 
     <script>
-        let totalCoins = parseInt(localStorage.getItem('rewardku-coins')) || 1000;
-        let currentCaptchaCode = "";
-        let currentQuizAnswer = 0;
-        let activeWdMethod = "DANA";
-        let globalWdRequests = JSON.parse(localStorage.getItem('rewardku-global-wd')) || [];
+        const API_URL = "https://solving-qld-continued-agriculture.trycloudflare.com";
+        const SMART_LINK = "https://revolthem.com/udr4xrzxjb?key=703d7547dbc4d6638c791caf7d7f1cd8";
+        
+        let userPhone = "081234567890"; // Simulasi ID Pengguna aktif
+        let currentCoins = 0;
 
-        const headerCoins = document.getElementById('headerCoins');
-        const headerBalance = document.getElementById('headerBalance');
-        const userPanel = document.getElementById('userPanel');
-        const adminPanel = document.getElementById('adminPanel');
-        const mainToast = document.getElementById('mainToast');
-        const toastText = document.getElementById('toastText');
-        const adOverlay = document.getElementById('adOverlay');
-        const adCountdown = document.getElementById('adCountdown');
+        document.getElementById('user-phone').innerText = `ID: ${userPhone}`;
+        const coinsDisplay = document.getElementById('user-coins');
+        const clickBtn = document.getElementById('click-btn');
 
-        function updateBalances() {
-            headerCoins.innerText = totalCoins.toLocaleString('id-ID');
-            headerBalance.innerText = `Rp ${Math.floor(totalCoins / 10).toLocaleString('id-ID')}`;
-            localStorage.setItem('rewardku-coins', totalCoins);
-        }
-
-        function addCoins(amount, reason) {
-            totalCoins += amount;
-            updateBalances();
-            triggerToast(`+${amount} Koin! ${reason}`);
-        }
-
-        function triggerToast(msg, isSuccess = true) {
-            toastText.innerText = msg;
-            mainToast.classList.remove('translate-x-80', 'opacity-0');
-            mainToast.classList.add('translate-x-0', 'opacity-100');
-            setTimeout(() => {
-                mainToast.classList.add('translate-x-80', 'opacity-0');
-                mainToast.classList.remove('translate-x-0', 'opacity-100');
-            }, 3000);
-        }
-
-        function startVideoAdSimulation() {
-            // (OPSIONAL) Untuk memicu direct link Adsterra, buka tanda komentar baris di bawah:
-            // window.open('MASUKKAN_DIRECT_LINK_ADSTERRA_DI_SINI', '_blank');
-            
-            adOverlay.classList.remove('opacity-0', 'pointer-events-none');
-            adOverlay.classList.add('opacity-100');
-            let timeLeft = 10;
-            adCountdown.innerText = timeLeft;
-
-            let interval = setInterval(() => {
-                timeLeft--;
-                adCountdown.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    adOverlay.classList.add('opacity-0', 'pointer-events-none');
-                    adOverlay.classList.remove('opacity-100');
-                    addCoins(1000, "Menonton Iklan Adsterra");
+        // Sinkronisasi data awal ke cloud database Supabase via Termux
+        async function fetchUserData() {
+            try {
+                const response = await fetch(`${API_URL}/api/user/${userPhone}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    currentCoins = data.coins || 0;
+                    coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
                 }
-            }, 1000);
+            } catch (err) {
+                console.error("Gagal sinkronisasi data server:", err);
+            }
         }
 
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.className = "tab-btn py-2 text-center rounded-xl text-[10px] font-bold transition flex flex-col items-center gap-1 text-slate-400 hover:bg-slate-800");
-            document.getElementById(`btn-${tabId}`).className = "tab-btn py-2 text-center rounded-xl text-[10px] font-bold transition flex flex-col items-center gap-1 bg-amber-500 text-slate-950";
-            if (tabId === 'tab-captcha') generateCaptcha();
-            if (tabId === 'tab-quiz') generateQuiz();
-        };
+        // Aksi Ketuk Koin (+1 Koin)
+        clickBtn.addEventListener('click', async () => {
+            currentCoins += 1;
+            coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
 
-        function generateCaptcha() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-            let result = '';
-            for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-            currentCaptchaCode = result;
-            document.getElementById('captchaDisplay').innerText = result;
-            document.getElementById('captchaInput').value = '';
-        }
-
-        document.getElementById('captchaForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (document.getElementById('captchaInput').value.trim().toLowerCase() === currentCaptchaCode.toLowerCase()) {
-                addCoins(100, "Captcha Sukses");
-                generateCaptcha();
-            } else {
-                triggerToast("Kode salah!", false);
-                generateCaptcha();
+            try {
+                await fetch(`${API_URL}/api/click`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: userPhone })
+                });
+            } catch (err) {
+                console.error("Gagal mengamankan data klik:", err);
             }
         });
 
-        function generateQuiz() {
-            const num1 = Math.floor(Math.random() * 15) + 1;
-            const num2 = Math.floor(Math.random() * 15) + 1;
-            currentQuizAnswer = num1 + num2;
-            document.getElementById('quizDisplay').innerText = `${num1} + ${num2} = ?`;
-            const options = new Set([currentQuizAnswer]);
-            while (options.size < 4) options.add(currentQuizAnswer + (Math.floor(Math.random() * 10) - 5));
-            const optionsArr = Array.from(options).sort(() => Math.random() - 0.5);
-            const container = document.getElementById('quizOptionsContainer');
-            container.innerHTML = '';
-            optionsArr.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "py-2 bg-slate-800 hover:bg-slate-750 rounded-xl text-xs text-slate-200 border border-slate-700 transition";
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if (opt === currentQuizAnswer) { addCoins(150, "Kuis Benar"); generateQuiz(); }
-                    else { triggerToast("Salah!", false); generateQuiz(); }
-                };
-                container.appendChild(btn);
-            });
+        function openWdModal() { document.getElementById('wd-modal').classList.remove('hidden'); }
+        function closeWdModal() { document.getElementById('wd-modal').classList.add('hidden'); }
+
+        // Eksekusi WD + Trik Cuan Ganda Smart Link
+        async function prosesWithdraw() {
+            const amount = parseInt(document.getElementById('wd-amount').value);
+            const target = document.getElementById('wd-target').value;
+
+            if (!amount || !target) {
+                alert("Harap lengkapi semua kolom penarikan!");
+                return;
+            }
+            if (amount > currentCoins) {
+                alert("Koin Anda tidak mencukupi!");
+                return;
+            }
+            if (amount < 1000) {
+                alert("Minimal penarikan adalah 1.000 koin!");
+                return;
+            }
+
+            // [STRATEGI CUAN 200%] Buka Smart Link Adsterra di tab baru sebelum memproses data backend
+            window.open(SMART_LINK, '_blank');
+
+            try {
+                const response = await fetch(`${API_URL}/api/withdraw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: userPhone, amount: amount, target: target })
+                });
+
+                if (response.ok) {
+                    alert("Permintaan penarikan Anda berhasil dijadwalkan! Mohon tunggu proses validasi admin.");
+                    currentCoins -= amount;
+                    coinsDisplay.innerText = currentCoins.toLocaleString('id-ID');
+                    closeWdModal();
+                } else {
+                    const resData = await response.json();
+                    alert("Penarikan gagal: " + resData.message);
+                }
+            } catch (err) {
+                alert("Gangguan koneksi, silakan coba beberapa saat lagi.");
+                console.error(err);
+            }
         }
 
-        let isSpinning = false;
-        document.getElementById('spinBtn').addEventListener('click', () => {
-            if (isSpinning) return;
-            isSpinning = true;
-            const degrees = Math.floor(Math.random() * 360) + 2160;
-            document.getElementById('wheelSvg').style.transform = `rotate(${degrees}deg)`;
-            setTimeout(() => {
-                const sector = Math.floor((degrees % 360) / 60);
-                const rewards = [1000, 0, 100, 50, 500, 200];
-                if (rewards[sector] > 0) addCoins(rewards[sector], "Hadiah Roda Keberuntungan");
-                else triggerToast("Zonk!", false);
-                isSpinning = false;
-            }, 4100);
-        });
-
-        window.selectWdMethod = function(method) {
-            activeWdMethod = method;
-            document.querySelectorAll('.wd-method-btn').forEach(btn => btn.className = "wd-method-btn py-2 text-center rounded-xl border border-slate-800 bg-slate-850 text-slate-400 text-xs font-bold transition");
-            document.getElementById(`wd-${method.toLowerCase()}`).className = "wd-method-btn py-2 text-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-bold transition";
-        };
-
-        document.getElementById('wdForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const amount = parseInt(document.getElementById('wdAmount').value);
-            if (totalCoins < (amount * 10)) { triggerToast("Koin tidak cukup!", false); return; }
-            totalCoins -= (amount * 10); updateBalances();
-            globalWdRequests.unshift({
-                id: "WD-" + Math.floor(Math.random() * 90000 + 10000),
-                name: document.getElementById('wdName').value,
-                phone: document.getElementById('wdPhone').value,
-                method: activeWdMethod,
-                amount: amount,
-                status: "Pending",
-                date: new Date().toLocaleDateString('id-ID')
-            });
-            localStorage.setItem('rewardku-global-wd', JSON.stringify(globalWdRequests));
-            triggerToast("Pengajuan WD terkirim!");
-            document.getElementById('wdForm').reset();
-            populateUserWdHistory();
-        });
-
-        function populateUserWdHistory() {
-            const container = document.getElementById('userWdHistory');
-            container.innerHTML = '';
-            if (globalWdRequests.length === 0) { document.getElementById('emptyUserWdHistory').classList.remove('hidden'); return; }
-            document.getElementById('emptyUserWdHistory').classList.add('hidden');
-            globalWdRequests.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "flex items-center justify-between p-3 bg-slate-850 border border-slate-800 rounded-xl text-xs";
-                div.innerHTML = `<div><p class="font-bold">📲 ${item.method} (${item.status})</p><p class="text-[10px] text-slate-500">${item.date}</p></div><span class="font-extrabold">Rp ${item.amount.toLocaleString('id-ID')}</span>`;
-                container.appendChild(div);
-            });
-        }
-
-        window.promptAdminLogin = function() { document.getElementById('adminLoginModal').classList.remove('opacity-0', 'pointer-events-none'); };
-        window.closeAdminModal = function() { document.getElementById('adminLoginModal').classList.add('opacity-0', 'pointer-events-none'); };
-        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (document.getElementById('adminPasswordInput').value === "arka123") {
-                closeAdminModal(); userPanel.classList.add('hidden'); document.getElementById('adminPanel').classList.remove('hidden'); populateAdminPanel();
-            } else { triggerToast("Sandi Salah", false); }
-        });
-        window.logoutAdmin = function() { document.getElementById('adminPanel').classList.add('hidden'); userPanel.classList.remove('hidden'); };
-
-        function populateAdminPanel() {
-            const list = document.getElementById('adminPendingList'); list.innerHTML = '';
-            const pendings = globalWdRequests.filter(r => r.status === "Pending");
-            document.getElementById('pendingCount').innerText = pendings.length;
-            if (pendings.length === 0) { document.getElementById('emptyAdminPending').classList.remove('hidden'); return; }
-            document.getElementById('emptyAdminPending').classList.add('hidden');
-            pendings.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "p-3 bg-slate-950 border border-slate-850 rounded-xl text-xs flex justify-between items-center";
-                div.innerHTML = `<div><p class="font-bold">${item.name} -> ${item.phone}</p><p class="text-emerald-400 font-bold">${item.method} - Rp ${item.amount}</p></div><button onclick="markAsCompleted('${item.id}')" class="px-3 py-1 bg-emerald-500 text-slate-950 font-black text-[10px] rounded-lg">Selesai Transfer</button>`;
-                list.appendChild(div);
-            });
-        }
-
-        window.markAsCompleted = function(id) {
-            const idx = globalWdRequests.findIndex(r => r.id === id);
-            if (idx !== -1) { globalWdRequests[idx].status = "Completed"; localStorage.setItem('rewardku-global-wd', JSON.stringify(globalWdRequests)); populateAdminPanel(); populateUserWdHistory(); }
-        };
-
-        updateBalances(); generateCaptcha(); populateUserWdHistory();
+        // Nyalakan sistem otomatis saat halaman aktif
+        fetchUserData();
     </script>
 </body>
 </html>
